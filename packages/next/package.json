@@ -259,7 +259,7 @@
     "text-table": "0.2.0",
     "timers-browserify": "2.0.12",
     "tty-browserify": "0.0.1",
-    "ua-parser-js": "0.7.28",
+    "ua-parser-js": "0.7.33",
     "unistore": "3.4.1",
     "util": "0.12.4",
     "uuid": "8.3.2",
