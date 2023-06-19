@@ -13,7 +13,7 @@
     "seed:run": "knex seed:run"
   },
   "dependencies": {
-    "knex": "0.21.6",
+    "knex": "2.4.0",
     "next": "latest",
     "pg": "8.4.1",
     "react": "^17.0.2",
