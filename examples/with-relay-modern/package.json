@@ -17,6 +17,6 @@
   "devDependencies": {
     "babel-plugin-relay": "^9.0.0",
     "graphql-cli": "^4.0.0",
-    "relay-compiler": "^13.0.0"
+    "relay-compiler": "^9.0.0"
   }
 }
