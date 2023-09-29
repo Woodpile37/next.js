@@ -4,7 +4,7 @@ import type { ModuleReference, CollectedMetadata } from './metadata/types'
 
 import path from 'path'
 import { stringify } from 'querystring'
-import chalk from 'next/dist/compiled/chalk'
+import { bold } from '../../../lib/picocolors'
 import { getModuleBuildInfo } from './get-module-build-info'
 import { verifyRootLayout } from '../../../lib/verifyRootLayout'
 import * as Log from '../../output/log'
@@ -21,7 +21,9 @@ import { AppPathnameNormalizer } from '../../../server/future/normalizers/built/
 import { AppBundlePathNormalizer } from '../../../server/future/normalizers/built/app/app-bundle-path-normalizer'
 import { MiddlewareConfig } from '../../analysis/get-page-static-info'
 import { getFilenameAndExtension } from './next-metadata-route-loader'
-import { loadEntrypoint } from './next-route-loader/load-entrypoint'
+import { isAppBuiltinNotFoundPage } from '../../utils'
+import { loadEntrypoint } from '../../load-entrypoint'
+import { isGroupSegment } from '../../../shared/lib/segment'
 
 export type AppLoaderOptions = {
   name: string
@@ -52,6 +54,8 @@ const FILE_TYPES = {
 const GLOBAL_ERROR_FILE_TYPE = 'global-error'
 const PAGE_SEGMENT = 'page$'
 const PARALLEL_CHILDREN_SEGMENT = 'children$'
+
+const defaultNotFoundPath = 'next/dist/client/components/not-found-error'
 
 type DirResolver = (pathToResolve: string) => string
 type PathResolver = (
@@ -175,9 +179,13 @@ async function createTreeCodeFromPath(
   globalError: string | undefined
 }> {
   const splittedPath = pagePath.split(/[\\/]/)
-  const appDirPrefix = splittedPath[0]
-  const pages: string[] = []
   const isNotFoundRoute = page === '/_not-found'
+  const isDefaultNotFound = isAppBuiltinNotFoundPage(pagePath)
+  const appDirPrefix = isDefaultNotFound ? APP_DIR_ALIAS : splittedPath[0]
+  const hasRootNotFound = await resolver(
+    `${appDirPrefix}/${FILE_TYPES['not-found']}`
+  )
+  const pages: string[] = []
 
   let rootLayout: string | undefined
   let globalError: string | undefined
@@ -223,6 +231,7 @@ async function createTreeCodeFromPath(
 
     // Existing tree are the children of the current segment
     const props: Record<string, string> = {}
+    // Root layer could be 1st layer of normal routes
     const isRootLayer = segments.length === 0
     const isRootLayoutOrRootPage = segments.length <= 1
 
@@ -237,7 +246,10 @@ async function createTreeCodeFromPath(
     let metadata: Awaited<ReturnType<typeof createStaticMetadataFromRoute>> =
       null
     const routerDirPath = `${appDirPrefix}${segmentPath}`
-    const resolvedRouteDir = await resolveDir(routerDirPath)
+    // For default not-found, don't traverse the directory to find metadata.
+    const resolvedRouteDir = isDefaultNotFound
+      ? ''
+      : await resolveDir(routerDirPath)
 
     if (resolvedRouteDir) {
       metadata = await createStaticMetadataFromRoute(resolvedRouteDir, {
@@ -311,27 +323,36 @@ async function createTreeCodeFromPath(
         ([, filePath]) => filePath !== undefined
       )
 
+      // Add default not found error as root not found if not present
+      const hasNotFoundFile = definedFilePaths.some(
+        ([type]) => type === 'not-found'
+      )
+      // If the first layer is a group route, we treat it as root layer
+      const isFirstLayerGroupRoute =
+        segments.length === 1 &&
+        subSegmentPath.filter((seg) => isGroupSegment(seg)).length === 1
+      if ((isRootLayer || isFirstLayerGroupRoute) && !hasNotFoundFile) {
+        // If you already have a root not found, don't insert default not-found to group routes root
+        if (!(hasRootNotFound && isFirstLayerGroupRoute)) {
+          definedFilePaths.push(['not-found', defaultNotFoundPath])
+        }
+      }
+
       if (!rootLayout) {
         const layoutPath = definedFilePaths.find(
           ([type]) => type === 'layout'
         )?.[1]
         rootLayout = layoutPath
 
+        if (isDefaultNotFound && !layoutPath) {
+          rootLayout = 'next/dist/client/components/default-layout'
+          definedFilePaths.push(['layout', rootLayout])
+        }
+
         if (layoutPath) {
           globalError = await resolver(
             `${path.dirname(layoutPath)}/${GLOBAL_ERROR_FILE_TYPE}`
           )
-
-          const hasNotFound = definedFilePaths.some(
-            ([type]) => type === 'not-found'
-          )
-          // Add default not found error as root not found if not present
-          if (!hasNotFound) {
-            const notFoundPath = 'next/dist/client/components/not-found-error'
-            if (notFoundPath) {
-              definedFilePaths.push(['not-found', notFoundPath])
-            }
-          }
         }
       }
 
@@ -350,7 +371,7 @@ async function createTreeCodeFromPath(
       if (isNotFoundRoute && normalizedParallelKey === 'children') {
         const notFoundPath =
           definedFilePaths.find(([type]) => type === 'not-found')?.[1] ??
-          'next/dist/client/components/not-found-error'
+          defaultNotFoundPath
         subtreeCode = `{
           children: ['__PAGE__', {}, {
             page: [
@@ -622,7 +643,7 @@ const nextAppLoader: AppLoader = async function nextAppLoader() {
     if (!isDev) {
       // If we're building and missing a root layout, exit the build
       Log.error(
-        `${chalk.bold(
+        `${bold(
           pagePath.replace(`${APP_DIR_ALIAS}/`, '')
         )} doesn't have a root layout. To fix this error, make sure every page has a root layout.`
       )
@@ -637,12 +658,12 @@ const nextAppLoader: AppLoader = async function nextAppLoader() {
         pageExtensions,
       })
       if (!createdRootLayout) {
-        let message = `${chalk.bold(
+        let message = `${bold(
           pagePath.replace(`${APP_DIR_ALIAS}/`, '')
         )} doesn't have a root layout. `
 
         if (rootLayoutPath) {
-          message += `We tried to create ${chalk.bold(
+          message += `We tried to create ${bold(
             path.relative(this._compiler?.context ?? '', rootLayoutPath)
           )} for you but something went wrong.`
         } else {
