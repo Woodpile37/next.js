@@ -253,7 +253,7 @@
     "micromatch": "4.0.4",
     "mini-css-extract-plugin": "2.4.3",
     "msw": "1.3.0",
-    "nanoid": "3.1.32",
+    "nanoid": "3.1.31",
     "native-url": "0.3.4",
     "neo-async": "2.6.1",
     "node-html-parser": "5.3.3",
