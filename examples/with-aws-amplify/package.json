@@ -6,6 +6,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "aws-amplify": "3.0.1",
+    "immer": "9.0.6",
+    "nanoid": "2.0.3",
     "@aws-amplify/ui-react": "3.5.9",
     "aws-amplify": "5.3.2",
     "next": "latest",
