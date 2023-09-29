@@ -298,11 +298,18 @@ const configSchema = {
             },
           ] as any,
         },
-        appDir: {
-          type: 'boolean',
-        },
         serverActions: {
           type: 'boolean',
+        },
+        serverActionsBodySizeLimit: {
+          oneOf: [
+            {
+              type: 'number',
+            },
+            {
+              type: 'string',
+            },
+          ] as any,
         },
         extensionAlias: {
           type: 'object',
@@ -340,9 +347,6 @@ const configSchema = {
         largePageDataBytes: {
           type: 'number',
         },
-        legacyBrowsers: {
-          type: 'boolean',
-        },
         manualClientBasePath: {
           type: 'boolean',
         },
@@ -350,9 +354,6 @@ const configSchema = {
           // automatic typing doesn't like enum
           enum: ['strict', 'flexible'] as any,
           type: 'string',
-        },
-        newNextLinkBehavior: {
-          type: 'boolean',
         },
         nextScriptWorkers: {
           type: 'boolean',
@@ -383,7 +384,7 @@ const configSchema = {
         outputFileTracingIncludes: {
           type: 'object',
         },
-        pageEnv: {
+        ppr: {
           type: 'boolean',
         },
         proxyTimeout: {
@@ -399,9 +400,6 @@ const configSchema = {
         scrollRestoration: {
           type: 'boolean',
         },
-        sharedPool: {
-          type: 'boolean',
-        },
         sri: {
           properties: {
             algorithm: {
@@ -412,9 +410,6 @@ const configSchema = {
           type: 'object',
         },
         strictNextHead: {
-          type: 'boolean',
-        },
-        swcFileReading: {
           type: 'boolean',
         },
         swcMinify: {
@@ -458,10 +453,19 @@ const configSchema = {
             loaders: {
               type: 'object',
             },
+            rules: {
+              type: 'object',
+            },
             resolveAlias: {
               type: 'object',
             },
           },
+        },
+        optimizePackageImports: {
+          type: 'array',
+        },
+        optimizeServerReact: {
+          type: 'boolean',
         },
         instrumentationHook: {
           type: 'boolean',
@@ -500,7 +504,24 @@ const configSchema = {
           },
         },
         logging: {
-          type: 'string',
+          type: 'object',
+          properties: {
+            level: {
+              type: 'string',
+            },
+            fullUrl: {
+              type: 'boolean',
+            },
+          },
+        },
+        serverMinification: {
+          type: 'boolean',
+        },
+        serverSourceMaps: {
+          type: 'boolean',
+        },
+        bundlePagesExternals: {
+          type: 'boolean',
         },
       },
       type: 'object',
@@ -727,8 +748,12 @@ const configSchema = {
     publicRuntimeConfig: {
       type: 'object',
     },
+    reactProductionProfiling: {
+      type: 'boolean',
+    },
     reactStrictMode: {
       type: 'boolean',
+      nullable: true,
     },
     redirects: {
       isFunction: true,

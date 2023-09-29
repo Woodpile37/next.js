@@ -43,7 +43,10 @@ describe('Test Draft Mode', () => {
       const res = await fetchViaHTTP(appPort, '/api/enable')
       expect(res.status).toBe(200)
 
-      const cookies = res.headers.get('set-cookie').split(',').map(cookie.parse)
+      const cookies = res.headers
+        .get('set-cookie')
+        .split(',')
+        .map((c) => cookie.parse(c))
 
       expect(cookies[0]).toBeTruthy()
       expect(cookies[0].__prerender_bypass).toBeTruthy()
@@ -76,7 +79,7 @@ describe('Test Draft Mode', () => {
         .get('set-cookie')
         .replace(/(=(?!Lax)\w{3}),/g, '$1')
         .split(',')
-        .map(cookie.parse)
+        .map((c) => cookie.parse(c))
 
       expect(cookies[0]).toBeTruthy()
     })
@@ -114,8 +117,7 @@ describe('Test Draft Mode', () => {
       await killApp(app)
     })
   })
-
-  describe('Server Mode', () => {
+  ;(process.env.TURBOPACK ? describe.skip : describe)('production mode', () => {
     let appPort, app, cookieString, initialRand
     const getOpts = () => ({ headers: { Cookie: cookieString } })
 
@@ -154,7 +156,7 @@ describe('Test Draft Mode', () => {
       expect(res.status).toBe(200)
 
       const originalCookies = res.headers.get('set-cookie').split(',')
-      const cookies = originalCookies.map(cookie.parse)
+      const cookies = originalCookies.map((c) => cookie.parse(c))
 
       expect(cookies.length).toBe(1)
       expect(cookies[0]).toBeTruthy()
@@ -212,7 +214,7 @@ describe('Test Draft Mode', () => {
         .get('set-cookie')
         .replace(/(=(?!Lax)\w{3}),/g, '$1')
         .split(',')
-        .map(cookie.parse)
+        .map((c) => cookie.parse(c))
 
       expect(cookies[0]).toBeTruthy()
       expect(cookies[0]).toMatchObject({

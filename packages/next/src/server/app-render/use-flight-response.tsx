@@ -1,9 +1,13 @@
 import type { ClientReferenceManifest } from '../../build/webpack/plugins/flight-manifest-plugin'
 import type { FlightResponseRef } from './flight-response-ref'
-import { readableStreamTee } from '../stream-utils/node-web-streams-helper'
 import { encodeText, decodeText } from '../stream-utils/encode-decode'
 import { htmlEscapeJsonString } from '../htmlescape'
-import { isEdgeRuntime } from './app-render'
+
+const isEdgeRuntime = process.env.NEXT_RUNTIME === 'edge'
+
+const INLINE_FLIGHT_PAYLOAD_BOOTSTRAP = 0
+const INLINE_FLIGHT_PAYLOAD_DATA = 1
+const INLINE_FLIGHT_PAYLOAD_FORM_STATE = 2
 
 /**
  * Render Flight stream.
@@ -11,20 +15,21 @@ import { isEdgeRuntime } from './app-render'
  */
 export function useFlightResponse(
   writable: WritableStream<Uint8Array>,
-  req: ReadableStream<Uint8Array>,
+  flightStream: ReadableStream<Uint8Array>,
   clientReferenceManifest: ClientReferenceManifest,
-  rscChunks: Uint8Array[],
   flightResponseRef: FlightResponseRef,
+  formState: null | any,
   nonce?: string
 ): Promise<JSX.Element> {
   if (flightResponseRef.current !== null) {
     return flightResponseRef.current
   }
+  // react-server-dom-webpack/client.edge must not be hoisted for require cache clearing to work correctly
   const {
     createFromReadableStream,
   } = require(`react-server-dom-webpack/client.edge`)
 
-  const [renderStream, forwardStream] = readableStreamTee(req)
+  const [renderStream, forwardStream] = flightStream.tee()
   const res = createFromReadableStream(renderStream, {
     moduleMap: isEdgeRuntime
       ? clientReferenceManifest.edgeSSRModuleMapping
@@ -43,27 +48,31 @@ export function useFlightResponse(
 
   function read() {
     forwardReader.read().then(({ done, value }) => {
-      if (value) {
-        rscChunks.push(value)
-      }
-
       if (!bootstrapped) {
         bootstrapped = true
         writer.write(
           encodeText(
             `${startScriptTag}(self.__next_f=self.__next_f||[]).push(${htmlEscapeJsonString(
-              JSON.stringify([0])
+              JSON.stringify([INLINE_FLIGHT_PAYLOAD_BOOTSTRAP])
+            )});self.__next_f.push(${htmlEscapeJsonString(
+              JSON.stringify([INLINE_FLIGHT_PAYLOAD_FORM_STATE, formState])
             )})</script>`
           )
         )
       }
       if (done) {
-        flightResponseRef.current = null
+        // Add a setTimeout here because the error component is too small, the first forwardReader.read() read will return the full chunk
+        // and then it immediately set flightResponseRef.current as null.
+        // react renders the component twice, the second render will run into the state with useFlightResponse where flightResponseRef.current is null,
+        // so it tries to render the flight payload again
+        setTimeout(() => {
+          flightResponseRef.current = null
+        })
         writer.close()
       } else {
         const responsePartial = decodeText(value, textDecoder)
         const scripts = `${startScriptTag}self.__next_f.push(${htmlEscapeJsonString(
-          JSON.stringify([1, responsePartial])
+          JSON.stringify([INLINE_FLIGHT_PAYLOAD_DATA, responsePartial])
         )})</script>`
 
         writer.write(encodeText(scripts))

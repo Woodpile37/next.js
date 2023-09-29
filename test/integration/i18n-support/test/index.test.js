@@ -58,8 +58,7 @@ describe('i18n Support', () => {
 
     runTests(curCtx)
   })
-
-  describe('production mode', () => {
+  ;(process.env.TURBOPACK ? describe.skip : describe)('production mode', () => {
     beforeAll(async () => {
       await fs.remove(join(appDir, '.next'))
       nextConfig.replace(/__EXTERNAL_PORT__/g, ctx.externalPort)
@@ -240,6 +239,28 @@ describe('i18n Support', () => {
             return 'yes'
           }, 'yes')
         })
+
+        it('should have correct locale domain hrefs', async () => {
+          const res = await fetchViaHTTP(
+            curCtx.appPort,
+            '/do-BE/frank/',
+            undefined,
+            {
+              redirect: 'manual',
+            }
+          )
+          expect(res.status).toBe(200)
+
+          const html = await res.text()
+          const $ = cheerio.load(html)
+
+          expect($('#to-fallback-hello')[0].attribs.href).toBe(
+            'http://example.do/do-BE/gsp/fallback/hello/'
+          )
+          expect($('#to-no-fallback-first')[0].attribs.href).toBe(
+            'http://example.do/do-BE/gsp/no-fallback/first/'
+          )
+        })
       }
 
       it('should redirect correctly', async () => {
@@ -411,26 +432,28 @@ describe('i18n Support', () => {
 
       runSlashTests(curCtx)
     })
+    ;(process.env.TURBOPACK ? describe.skip : describe)(
+      'production mode',
+      () => {
+        const curCtx = {
+          ...ctx,
+        }
+        beforeAll(async () => {
+          await fs.remove(join(appDir, '.next'))
+          nextConfig.replace('// trailingSlash', 'trailingSlash')
 
-    describe('production mode', () => {
-      const curCtx = {
-        ...ctx,
+          await nextBuild(appDir)
+          curCtx.appPort = await findPort()
+          curCtx.app = await nextStart(appDir, curCtx.appPort)
+        })
+        afterAll(async () => {
+          nextConfig.restore()
+          await killApp(curCtx.app)
+        })
+
+        runSlashTests(curCtx)
       }
-      beforeAll(async () => {
-        await fs.remove(join(appDir, '.next'))
-        nextConfig.replace('// trailingSlash', 'trailingSlash')
-
-        await nextBuild(appDir)
-        curCtx.appPort = await findPort()
-        curCtx.app = await nextStart(appDir, curCtx.appPort)
-      })
-      afterAll(async () => {
-        nextConfig.restore()
-        await killApp(curCtx.app)
-      })
-
-      runSlashTests(curCtx)
-    })
+    )
   })
 
   describe('with trailingSlash: false', () => {
@@ -476,24 +499,26 @@ describe('i18n Support', () => {
 
       runSlashTests(curCtx)
     })
+    ;(process.env.TURBOPACK ? describe.skip : describe)(
+      'production mode',
+      () => {
+        const curCtx = { ...ctx }
+        beforeAll(async () => {
+          await fs.remove(join(appDir, '.next'))
+          nextConfig.replace('// trailingSlash: true', 'trailingSlash: false')
 
-    describe('production mode', () => {
-      const curCtx = { ...ctx }
-      beforeAll(async () => {
-        await fs.remove(join(appDir, '.next'))
-        nextConfig.replace('// trailingSlash: true', 'trailingSlash: false')
+          await nextBuild(appDir)
+          curCtx.appPort = await findPort()
+          curCtx.app = await nextStart(appDir, curCtx.appPort)
+        })
+        afterAll(async () => {
+          nextConfig.restore()
+          await killApp(curCtx.app)
+        })
 
-        await nextBuild(appDir)
-        curCtx.appPort = await findPort()
-        curCtx.app = await nextStart(appDir, curCtx.appPort)
-      })
-      afterAll(async () => {
-        nextConfig.restore()
-        await killApp(curCtx.app)
-      })
-
-      runSlashTests(curCtx)
-    })
+        runSlashTests(curCtx)
+      }
+    )
   })
 
   it('should show proper error for duplicate defaultLocales', async () => {

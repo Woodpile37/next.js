@@ -1,5 +1,4 @@
 import type arg from 'next/dist/compiled/arg/index.js'
-import { getFreePort } from './worker-utils'
 
 export function printAndExit(message: string, code = 1) {
   if (code === 0) {
@@ -11,23 +10,17 @@ export function printAndExit(message: string, code = 1) {
   process.exit(code)
 }
 
-export const genRouterWorkerExecArgv = async (
-  isNodeDebugging: boolean | 'brk'
-) => {
-  const execArgv = process.execArgv.filter((localArg) => {
-    return (
-      !localArg.startsWith('--inspect') && !localArg.startsWith('--inspect-brk')
-    )
-  })
-
-  if (isNodeDebugging) {
-    const debugPort = await getFreePort()
-    execArgv.push(
-      `--inspect${isNodeDebugging === 'brk' ? '-brk' : ''}=${debugPort + 1}`
-    )
-  }
-
-  return execArgv
+export const getDebugPort = () => {
+  const debugPortStr =
+    process.execArgv
+      .find(
+        (localArg) =>
+          localArg.startsWith('--inspect') ||
+          localArg.startsWith('--inspect-brk')
+      )
+      ?.split('=')[1] ??
+    process.env.NODE_OPTIONS?.match?.(/--inspect(-brk)?(=(\S+))?( |$)/)?.[3]
+  return debugPortStr ? parseInt(debugPortStr, 10) : 9229
 }
 
 const NODE_INSPECT_RE = /--inspect(-brk)?(=\S+)?( |$)/
@@ -47,3 +40,5 @@ export function getPort(args: arg.Result<arg.Spec>): number {
 
   return 3000
 }
+
+export const RESTART_EXIT_CODE = 77

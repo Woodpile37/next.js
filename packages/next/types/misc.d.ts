@@ -20,7 +20,13 @@ declare module 'next/dist/compiled/react-dom/server'
 declare module 'next/dist/compiled/react-dom/server.edge'
 declare module 'next/dist/compiled/react-dom/server.browser'
 declare module 'next/dist/compiled/browserslist'
+
 declare module 'react-server-dom-webpack/client'
+declare module 'react-server-dom-webpack/server.edge'
+declare module 'react-server-dom-webpack/server.node'
+declare module 'react-server-dom-webpack/client.edge'
+
+declare module 'react-dom/server-rendering-stub'
 declare module 'react-dom/server.browser'
 declare module 'react-dom/server.edge'
 
@@ -37,14 +43,18 @@ declare module 'next/dist/compiled/@next/react-refresh-utils/dist/ReactRefreshWe
   export = m
 }
 
+declare module 'next/dist/compiled/node-fetch' {
+  import fetch from 'node-fetch'
+  export * from 'node-fetch'
+  export default fetch
+}
+
 declare module 'next/dist/compiled/node-html-parser' {
   export * from 'node-html-parser'
 }
 
-declare module 'next/dist/compiled/node-fetch' {
-  import m from 'node-fetch'
-  export default m
-  export * from 'node-fetch'
+declare module 'next/dist/compiled/@mswjs/interceptors/ClientRequest' {
+  export * from '@mswjs/interceptors/ClientRequest'
 }
 
 declare module 'next/dist/compiled/undici' {}
@@ -55,11 +65,6 @@ declare module 'next/dist/compiled/jest-worker' {
 
 declare module 'next/dist/compiled/react-is' {
   export * from 'react-is'
-}
-
-declare module 'next/dist/compiled/chalk' {
-  import m from 'chalk'
-  export = m
 }
 
 declare module 'next/dist/compiled/cssnano-simple' {
@@ -98,6 +103,11 @@ declare module 'next/dist/compiled/acorn' {
 }
 declare module 'next/dist/compiled/amphtml-validator' {
   import m from 'amphtml-validator'
+  export = m
+}
+
+declare module 'next/dist/compiled/superstruct' {
+  import m from 'superstruct'
   export = m
 }
 declare module 'next/dist/compiled/async-retry'

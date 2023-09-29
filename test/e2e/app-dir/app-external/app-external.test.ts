@@ -1,4 +1,5 @@
 import { createNextDescribe } from 'e2e-utils'
+import { shouldRunTurboDevTest } from '../../../lib/next-test-utils'
 
 async function resolveStreamResponse(response: any, onData?: any) {
   let result = ''
@@ -27,7 +28,9 @@ createNextDescribe(
       scripts: {
         setup: `cp -r ./node_modules_bak/* ./node_modules`,
         build: 'yarn setup && next build',
-        dev: 'yarn setup && next dev',
+        dev: `yarn setup && next ${
+          shouldRunTurboDevTest() ? 'dev --turbo' : 'dev'
+        }`,
         start: 'next start',
       },
     },
@@ -214,37 +217,17 @@ createNextDescribe(
       expect(html).toContain('Foo')
     })
 
-    if (isNextDev) {
-      it('should error for require ESM package in CJS package', async () => {
-        const page = 'app/cjs-import-esm/page.js'
-        // reuse esm-client-ref/page.js
-        const pageSource = await next.readFile('app/esm-client-ref/page.js')
-
-        try {
-          await next.patchFile(
-            page,
-            pageSource.replace(
-              "'client-esm-module'",
-              "'client-cjs-import-esm-wildcard'"
-            )
-          )
-          await next.render('/cjs-import-esm')
-        } finally {
-          await next.patchFile(page, pageSource)
-        }
-
-        expect(next.cliOutput).toInclude(
-          `ESM packages (client-esm-module-wildcard) need to be imported`
-        )
-      })
-    }
-
     it('should have proper tree-shaking for known modules in CJS', async () => {
       const html = await next.render('/test-middleware')
       expect(html).toContain('it works')
 
       const middlewareBundle = await next.readFile('.next/server/middleware.js')
       expect(middlewareBundle).not.toContain('image-response')
+    })
+
+    it('should use the same async storages if imported directly', async () => {
+      const html = await next.render('/async-storage')
+      expect(html).toContain('success')
     })
   }
 )

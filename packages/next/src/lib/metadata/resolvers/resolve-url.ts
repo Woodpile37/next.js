@@ -32,8 +32,9 @@ export function getSocialImageFallbackMetadataBase(
   }
 
   if (isMetadataBaseMissing) {
+    Log.warnOnce('')
     Log.warnOnce(
-      `\nmetadata.metadataBase is not set for resolving social open graph or twitter images, fallbacks to "${fallbackMetadata.origin}". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase`
+      `metadata.metadataBase is not set for resolving social open graph or twitter images, using "${fallbackMetadata.origin}". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase`
     )
   }
 
@@ -57,7 +58,7 @@ function resolveUrl(
     // If we can construct a URL instance from url, ignore metadataBase
     const parsedUrl = new URL(url)
     return parsedUrl
-  } catch (_) {}
+  } catch {}
 
   if (!metadataBase) {
     metadataBase = createLocalMetadataBase()
@@ -70,4 +71,29 @@ function resolveUrl(
   return new URL(joinedPath, metadataBase)
 }
 
-export { isStringOrURL, resolveUrl }
+// Resolve with `pathname` if `url` is a relative path.
+function resolveRelativeUrl(url: string | URL, pathname: string): string | URL {
+  if (typeof url === 'string' && url.startsWith('./')) {
+    return path.resolve(pathname, url)
+  }
+  return url
+}
+
+// Resolve `pathname` if `url` is a relative path the compose with `metadataBase`.
+function resolveAbsoluteUrlWithPathname(
+  url: string | URL,
+  metadataBase: URL | null,
+  pathname: string
+) {
+  url = resolveRelativeUrl(url, pathname)
+
+  const result = metadataBase ? resolveUrl(url, metadataBase) : url
+  return result.toString()
+}
+
+export {
+  isStringOrURL,
+  resolveUrl,
+  resolveRelativeUrl,
+  resolveAbsoluteUrlWithPathname,
+}

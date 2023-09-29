@@ -1,4 +1,4 @@
-import type { HtmlProps } from './html-context'
+import type { HtmlProps } from './html-context.shared-runtime'
 import type { ComponentType } from 'react'
 import type { DomainLocale } from '../../server/config'
 import type { Env } from '@next/env'
@@ -451,4 +451,8 @@ export interface CacheFs {
   writeFile(f: string, d: any): Promise<void>
   mkdir(dir: string): Promise<void | string>
   stat(f: string): Promise<{ mtime: Date }>
+}
+
+export function stringifyError(error: Error) {
+  return JSON.stringify({ message: error.message, stack: error.stack })
 }

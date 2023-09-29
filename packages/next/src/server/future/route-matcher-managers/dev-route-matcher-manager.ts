@@ -5,7 +5,7 @@ import { DefaultRouteMatcherManager } from './default-route-matcher-manager'
 import { MatchOptions, RouteMatcherManager } from './route-matcher-manager'
 import path from '../../../shared/lib/isomorphic/path'
 import * as Log from '../../../build/output/log'
-import chalk from 'next/dist/compiled/chalk'
+import { cyan } from '../../../lib/picocolors'
 import { RouteMatcher } from '../route-matchers/route-matcher'
 
 export interface RouteEnsurer {
@@ -55,19 +55,7 @@ export class DevRouteMatcherManager extends DefaultRouteMatcherManager {
           duplicate.definition.kind === RouteKind.PAGES_API
       )
     ) {
-      throw new Error(
-        `Conflicting app and page file found: ${matcher.duplicated
-          // Sort the error output so that the app pages (starting with "app")
-          // are first.
-          .sort((a, b) =>
-            a.definition.filename.localeCompare(b.definition.filename)
-          )
-          .map(
-            (duplicate) =>
-              `"${path.relative(this.dir, duplicate.definition.filename)}"`
-          )
-          .join(' and ')}. Please remove one to continue.`
-      )
+      return null
     }
 
     return match
@@ -125,9 +113,9 @@ export class DevRouteMatcherManager extends DefaultRouteMatcherManager {
       Log.warn(
         `Duplicate page detected. ${matchers
           .map((matcher) =>
-            chalk.cyan(path.relative(this.dir, matcher.definition.filename))
+            cyan(path.relative(this.dir, matcher.definition.filename))
           )
-          .join(' and ')} resolve to ${chalk.cyan(pathname)}`
+          .join(' and ')} resolve to ${cyan(pathname)}`
       )
     }
   }

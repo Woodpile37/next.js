@@ -1850,8 +1850,8 @@ describe('Prerender', () => {
         previewRes.headers
           .get('set-cookie')
           .split(',')
-          .forEach((c) => {
-            c = cookie.parse(c)
+          .forEach((s) => {
+            const c = cookie.parse(s)
             const isBypass = c.__prerender_bypass
 
             if (isBypass || c.__next_preview_data) {
@@ -2070,7 +2070,6 @@ describe('Prerender', () => {
               /node_modules\/react\/index\.js/,
               /node_modules\/react\/package\.json/,
               /node_modules\/react\/cjs\/react\.production\.min\.js/,
-              /node_modules\/next/,
             ],
             notTests: [],
           },
@@ -2082,7 +2081,6 @@ describe('Prerender', () => {
               /node_modules\/react\/index\.js/,
               /node_modules\/react\/package\.json/,
               /node_modules\/react\/cjs\/react\.production\.min\.js/,
-              /node_modules\/next/,
               /\/world.txt/,
             ],
             notTests: [
@@ -2098,9 +2096,6 @@ describe('Prerender', () => {
               /node_modules\/react\/index\.js/,
               /node_modules\/react\/package\.json/,
               /node_modules\/react\/cjs\/react\.production\.min\.js/,
-              /node_modules\/next/,
-              /next\/router\.js/,
-              /next\/dist\/client\/router\.js/,
               /node_modules\/@firebase\/firestore\/.*?\.js/,
             ],
             notTests: [/\/world.txt/],

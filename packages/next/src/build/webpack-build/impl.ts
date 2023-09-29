@@ -1,5 +1,5 @@
-import type { webpack } from 'next/dist/compiled/webpack/webpack'
-import chalk from 'next/dist/compiled/chalk'
+import { type webpack } from 'next/dist/compiled/webpack/webpack'
+import { red } from '../../lib/picocolors'
 import formatWebpackMessages from '../../client/dev/error-overlay/format-webpack-messages'
 import { nonNullable } from '../../lib/non-nullable'
 import {
@@ -24,8 +24,8 @@ import loadConfig from '../../server/config'
 import { trace } from '../../trace'
 import { WEBPACK_LAYERS } from '../../lib/constants'
 import {
+  BuildTraceContext,
   TraceEntryPointsPlugin,
-  TurbotraceContext,
 } from '../webpack/plugins/next-trace-entrypoints-plugin'
 import { UnwrapPromise } from '../../lib/coalesced-function'
 import * as pagesPluginModule from '../webpack/plugins/pages-manifest-plugin'
@@ -61,7 +61,7 @@ export async function webpackBuildImpl(
 ): Promise<{
   duration: number
   pluginState: any
-  turbotraceContext?: TurbotraceContext
+  buildTraceContext?: BuildTraceContext
   serializedPagesManifestEntries?: (typeof NextBuildContext)['serializedPagesManifestEntries']
 }> {
   let result: CompilerResult | null = {
@@ -150,6 +150,7 @@ export async function webpackBuildImpl(
 
   const clientConfig = configs[0]
   const serverConfig = configs[1]
+  const edgeConfig = configs[2]
 
   if (
     clientConfig.optimization &&
@@ -173,23 +174,31 @@ export async function webpackBuildImpl(
 
     // During the server compilations, entries of client components will be
     // injected to this set and then will be consumed by the client compiler.
-    let serverResult: UnwrapPromise<ReturnType<typeof runCompiler>> | null =
+    let serverResult: UnwrapPromise<ReturnType<typeof runCompiler>>[0] | null =
       null
-    let edgeServerResult: UnwrapPromise<ReturnType<typeof runCompiler>> | null =
-      null
+    let edgeServerResult:
+      | UnwrapPromise<ReturnType<typeof runCompiler>>[0]
+      | null = null
+
+    let inputFileSystem: any
 
     if (!compilerName || compilerName === 'server') {
-      serverResult = await runCompiler(serverConfig, {
+      debug('starting server compiler')
+      const start = Date.now()
+      ;[serverResult, inputFileSystem] = await runCompiler(serverConfig, {
         runWebpackSpan,
+        inputFileSystem,
       })
-      debug('server result', serverResult)
+      debug(`server compiler finished ${Date.now() - start}ms`)
     }
 
     if (!compilerName || compilerName === 'edge-server') {
-      edgeServerResult = configs[2]
-        ? await runCompiler(configs[2], { runWebpackSpan })
-        : null
-      debug('edge server result', edgeServerResult)
+      debug('starting edge-server compiler')
+      const start = Date.now()
+      ;[edgeServerResult, inputFileSystem] = edgeConfig
+        ? await runCompiler(edgeConfig, { runWebpackSpan, inputFileSystem })
+        : [null]
+      debug(`edge-server compiler finished ${Date.now() - start}ms`)
     }
 
     // Only continue if there were no errors
@@ -206,24 +215,29 @@ export async function webpackBuildImpl(
               ...clientEntry[CLIENT_STATIC_FILES_RUNTIME_MAIN_APP].import,
               value,
             ],
-            layer: WEBPACK_LAYERS.appClient,
+            layer: WEBPACK_LAYERS.appPagesBrowser,
           }
         } else {
           clientEntry[key] = {
             dependOn: [CLIENT_STATIC_FILES_RUNTIME_MAIN_APP],
             import: value,
-            layer: WEBPACK_LAYERS.appClient,
+            layer: WEBPACK_LAYERS.appPagesBrowser,
           }
         }
       }
 
       if (!compilerName || compilerName === 'client') {
-        clientResult = await runCompiler(clientConfig, {
+        debug('starting client compiler')
+        const start = Date.now()
+        ;[clientResult, inputFileSystem] = await runCompiler(clientConfig, {
           runWebpackSpan,
+          inputFileSystem,
         })
-        debug('client result', clientResult)
+        debug(`client compiler finished ${Date.now() - start}ms`)
       }
     }
+
+    inputFileSystem.purge()
 
     result = {
       warnings: ([] as any[])
@@ -269,7 +283,7 @@ export async function webpackBuildImpl(
     }
     let error = result.errors.filter(Boolean).join('\n\n')
 
-    console.error(chalk.red('Failed to compile.\n'))
+    console.error(red('Failed to compile.\n'))
 
     if (
       error.indexOf('private-next-pages') > -1 &&
@@ -306,12 +320,12 @@ export async function webpackBuildImpl(
       console.warn()
     } else if (!compilerName) {
       NextBuildContext.buildSpinner?.stopAndPersist()
-      Log.info('Compiled successfully')
+      Log.event('Compiled successfully')
     }
 
     return {
       duration: webpackBuildEnd[0],
-      turbotraceContext: traceEntryPointsPlugin?.turbotraceContext,
+      buildTraceContext: traceEntryPointsPlugin?.buildTraceContext,
       pluginState: getPluginState(),
       serializedPagesManifestEntries: {
         edgeServerPages: pagesPluginModule.edgeServerPages,
@@ -347,25 +361,30 @@ export async function workerMain(workerData: {
   /// load the config because it's not serializable
   NextBuildContext.config = await loadConfig(
     PHASE_PRODUCTION_BUILD,
-    NextBuildContext.dir!,
-    undefined,
-    undefined,
-    true
+    NextBuildContext.dir!
   )
   NextBuildContext.nextBuildSpan = trace('next-build')
 
   const result = await webpackBuildImpl(workerData.compilerName)
-  const { entriesTrace } = result.turbotraceContext ?? {}
+  const { entriesTrace, chunksTrace } = result.buildTraceContext ?? {}
   if (entriesTrace) {
     const { entryNameMap, depModArray } = entriesTrace
     if (depModArray) {
-      result.turbotraceContext!.entriesTrace!.depModArray = depModArray
+      result.buildTraceContext!.entriesTrace!.depModArray = depModArray
     }
     if (entryNameMap) {
       const entryEntries = Array.from(entryNameMap?.entries() ?? [])
       // @ts-expect-error
-      result.turbotraceContext.entriesTrace.entryNameMap = entryEntries
+      result.buildTraceContext.entriesTrace.entryNameMap = entryEntries
     }
+  }
+  if (chunksTrace?.entryNameFilesMap) {
+    const entryNameFilesMap = Array.from(
+      chunksTrace.entryNameFilesMap.entries() ?? []
+    )
+
+    // @ts-expect-error
+    result.buildTraceContext!.chunksTrace!.entryNameFilesMap = entryNameFilesMap
   }
   return result
 }

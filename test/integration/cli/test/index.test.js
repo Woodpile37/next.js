@@ -10,13 +10,44 @@ import {
   runNextCommandDev,
 } from 'next-test-utils'
 import fs from 'fs-extra'
-import { join } from 'path'
+import path, { join } from 'path'
 import pkg from 'next/package'
 import http from 'http'
 import stripAnsi from 'strip-ansi'
 
-const dir = join(__dirname, '..')
+const dirBasic = join(__dirname, '../basic')
 const dirDuplicateSass = join(__dirname, '../duplicate-sass')
+
+const runAndCaptureOutput = async ({ port }) => {
+  let stdout = ''
+  let stderr = ''
+
+  let app = http.createServer((_, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('OK')
+  })
+
+  await new Promise((resolve, reject) => {
+    app.on('error', reject)
+    app.on('listening', () => resolve())
+    app.listen(port)
+  })
+
+  await launchApp(dirBasic, port, {
+    stdout: true,
+    stderr: true,
+    onStdout(msg) {
+      stdout += msg
+    },
+    onStderr(msg) {
+      stderr += msg
+    },
+  })
+
+  await new Promise((resolve) => app.close(resolve))
+
+  return { stdout, stderr }
+}
 
 const testExitSignal = async (
   killSignal = '',
@@ -52,8 +83,8 @@ describe('CLI Usage', () => {
   describe('start', () => {
     test('should exit when SIGINT is signalled', async () => {
       require('console').log('before build')
-      await fs.remove(join(dir, '.next'))
-      await nextBuild(dir, undefined, {
+      await fs.remove(join(dirBasic, '.next'))
+      await nextBuild(dirBasic, undefined, {
         onStdout(msg) {
           console.log(msg)
         },
@@ -66,13 +97,13 @@ describe('CLI Usage', () => {
       const port = await findPort()
       await testExitSignal(
         'SIGINT',
-        ['start', dir, '-p', port],
-        /started server on/
+        ['start', dirBasic, '-p', port],
+        /- Local:/
       )
     })
     test('should exit when SIGTERM is signalled', async () => {
-      await fs.remove(join(dir, '.next'))
-      await nextBuild(dir, undefined, {
+      await fs.remove(join(dirBasic, '.next'))
+      await nextBuild(dirBasic, undefined, {
         onStdout(msg) {
           console.log(msg)
         },
@@ -83,8 +114,8 @@ describe('CLI Usage', () => {
       const port = await findPort()
       await testExitSignal(
         'SIGTERM',
-        ['start', dir, '-p', port],
-        /started server on/
+        ['start', dirBasic, '-p', port],
+        /- Local:/
       )
     })
 
@@ -103,15 +134,32 @@ describe('CLI Usage', () => {
     })
 
     test('should format IPv6 addresses correctly', async () => {
+      await nextBuild(dirBasic)
       const port = await findPort()
-      const output = await runNextCommand(
-        ['start', '--hostname', '::', '--port', port],
+
+      let stdout = ''
+      const app = await runNextCommandDev(
+        ['start', dirBasic, '--hostname', '::', '--port', port],
+        undefined,
         {
-          stdout: true,
+          nextStart: true,
+          onStdout(msg) {
+            stdout += msg
+          },
         }
       )
-      expect(output.stdout).toMatch(new RegExp(`on \\[::\\]:${port}`))
-      expect(output.stdout).toMatch(new RegExp(`http://\\[::1\\]:${port}`))
+
+      try {
+        await check(() => {
+          // Only display when hostname is provided
+          expect(stdout).toMatch(
+            new RegExp(`Network:\\s*http://\\[::\\]:${port}`)
+          )
+          expect(stdout).toMatch(new RegExp(`http://\\[::1\\]:${port}`))
+        })
+      } finally {
+        await killApp(app)
+      }
     })
 
     test('should warn when unknown argument provided', async () => {
@@ -199,6 +247,32 @@ describe('CLI Usage', () => {
       )
       expect(stderr).not.toContain(
         'Invalid keep alive timeout provided, expected a non negative number'
+      )
+    })
+
+    test('should not start on a port out of range', async () => {
+      const invalidPort = '300001'
+      const { stderr } = await runNextCommand(
+        ['start', '--port', invalidPort],
+        {
+          stderr: true,
+        }
+      )
+
+      expect(stderr).toContain(`options.port should be >= 0 and < 65536.`)
+    })
+
+    test('should not start on a reserved port', async () => {
+      const reservedPort = '4045'
+      const { stderr } = await runNextCommand(
+        ['start', '--port', reservedPort],
+        {
+          stderr: true,
+        }
+      )
+
+      expect(stderr).toContain(
+        `Bad port: "${reservedPort}" is reserved for npp`
       )
     })
   })
@@ -299,11 +373,11 @@ describe('CLI Usage', () => {
     })
 
     test('should exit when SIGINT is signalled', async () => {
-      await testExitSignal('SIGINT', ['build', dir])
+      await testExitSignal('SIGINT', ['build', dirBasic])
     })
 
     test('should exit when SIGTERM is signalled', async () => {
-      await testExitSignal('SIGTERM', ['build', dir])
+      await testExitSignal('SIGTERM', ['build', dirBasic])
     })
 
     test('invalid directory', async () => {
@@ -334,13 +408,17 @@ describe('CLI Usage', () => {
     test('custom directory', async () => {
       const port = await findPort()
       let output = ''
-      const app = await runNextCommandDev([dir, '--port', port], undefined, {
-        onStdout(msg) {
-          output += stripAnsi(msg)
-        },
-      })
+      const app = await runNextCommandDev(
+        [dirBasic, '--port', port],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+        }
+      )
       try {
-        await check(() => output, /started server/i)
+        await check(() => output, /- Local:/i)
       } finally {
         await killApp(app)
       }
@@ -349,13 +427,16 @@ describe('CLI Usage', () => {
     test('--port', async () => {
       const port = await findPort()
       let output = ''
-      const app = await runNextCommandDev([dir, '--port', port], undefined, {
-        onStdout(msg) {
-          output += stripAnsi(msg)
-        },
-      })
+      const app = await runNextCommandDev(
+        [dirBasic, '--port', port],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+        }
+      )
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
         await check(() => output, new RegExp(`http://localhost:${port}`))
       } finally {
         await killApp(app)
@@ -365,18 +446,21 @@ describe('CLI Usage', () => {
     test('--port 0', async () => {
       const port = await findPort()
       let output = ''
-      const app = await runNextCommandDev([dir, '--port', port], undefined, {
-        onStdout(msg) {
-          output += stripAnsi(msg)
-        },
-      })
+      const app = await runNextCommandDev(
+        [dirBasic, '--port', port],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+        }
+      )
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
         await check(() => output, new RegExp(`http://localhost:${port}`))
       } finally {
         await killApp(app)
       }
-      const matches = /on 0.0.0.0:(\d+)/.exec(output)
+      const matches = /- Local/.exec(output)
       expect(matches).not.toBe(null)
 
       const _port = parseInt(matches[1])
@@ -387,7 +471,7 @@ describe('CLI Usage', () => {
 
     test('PORT=0', async () => {
       let output = ''
-      const app = await runNextCommandDev([dir], undefined, {
+      const app = await runNextCommandDev([dirBasic], undefined, {
         env: {
           PORT: 0,
         },
@@ -396,10 +480,11 @@ describe('CLI Usage', () => {
         },
       })
       try {
-        await check(() => output, /on 0.0.0.0:(\d+)/)
-        const matches = /on 0.0.0.0:(\d+)/.exec(output)
-        const _port = parseInt(matches[1])
-        expect(matches).not.toBe(null)
+        await check(() => output, /- Local:/)
+        // without --hostname, do not log Network: xxx
+        const matches = /Network:\s*http:\/\/\[::\]:(\d+)/.exec(output)
+        const _port = parseInt(matches)
+        expect(matches).toBe(null)
         // Regression test: port 0 was interpreted as if no port had been
         // provided, falling back to 3000.
         expect(_port).not.toBe(3000)
@@ -411,14 +496,17 @@ describe('CLI Usage', () => {
     test("NODE_OPTIONS='--inspect'", async () => {
       const port = await findPort()
       let output = ''
-      const app = await runNextCommandDev([dir, '--port', port], undefined, {
-        onStdout(msg) {
-          output += stripAnsi(msg)
-        },
-        env: { NODE_OPTIONS: '--inspect' },
-      })
+      const app = await runNextCommandDev(
+        [dirBasic, '--port', port],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+          env: { NODE_OPTIONS: '--inspect' },
+        }
+      )
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
         await check(() => output, new RegExp(`http://localhost:${port}`))
       } finally {
         await killApp(app)
@@ -428,14 +516,13 @@ describe('CLI Usage', () => {
     test('-p', async () => {
       const port = await findPort()
       let output = ''
-      const app = await runNextCommandDev([dir, '-p', port], undefined, {
+      const app = await runNextCommandDev([dirBasic, '-p', port], undefined, {
         onStdout(msg) {
           output += stripAnsi(msg)
         },
         env: { NODE_OPTIONS: '--inspect' },
       })
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
         await check(() => output, new RegExp(`http://localhost:${port}`))
       } finally {
         await killApp(app)
@@ -444,42 +531,32 @@ describe('CLI Usage', () => {
 
     test('-p conflict', async () => {
       const port = await findPort()
+      const { stderr, stdout } = await runAndCaptureOutput({ port })
 
-      let app = http.createServer((_, res) => {
-        res.writeHead(200, { 'Content-Type': 'text/plain' })
-        res.end('OK')
-      })
-      await new Promise((resolve, reject) => {
-        // This code catches EADDRINUSE error if the port is already in use
-        app.on('error', reject)
-        app.on('listening', () => resolve())
-        app.listen(port)
-      })
-      let stdout = '',
-        stderr = ''
-      await launchApp(dir, port, {
-        stdout: true,
-        stderr: true,
-        onStdout(msg) {
-          stdout += msg
-        },
-        onStderr(msg) {
-          stderr += msg
-        },
-      })
-      await new Promise((resolve) => app.close(resolve))
       expect(stderr).toMatch('already in use')
-      expect(stdout).not.toMatch('ready')
+      expect(stdout).not.toMatch(/ready/i)
       expect(stdout).not.toMatch('started')
       expect(stdout).not.toMatch(`${port}`)
       expect(stripAnsi(stdout).trim()).toBeFalsy()
+    })
+
+    test('-p reserved', async () => {
+      const TCP_MUX_PORT = 1
+      const { stderr, stdout } = await runAndCaptureOutput({
+        port: TCP_MUX_PORT,
+      })
+
+      expect(stdout).toMatch('')
+      expect(stderr).toMatch(
+        `Bad port: "${TCP_MUX_PORT}" is reserved for tcpmux`
+      )
     })
 
     test('--hostname', async () => {
       const port = await findPort()
       let output = ''
       const app = await runNextCommandDev(
-        [dir, '--hostname', '0.0.0.0', '--port', port],
+        [dirBasic, '--hostname', '0.0.0.0', '--port', port],
         undefined,
         {
           onStdout(msg) {
@@ -488,7 +565,10 @@ describe('CLI Usage', () => {
         }
       )
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
+        await check(
+          () => output,
+          new RegExp(`Network:\\s*http://0.0.0.0:${port}`)
+        )
         await check(() => output, new RegExp(`http://localhost:${port}`))
       } finally {
         await killApp(app)
@@ -499,7 +579,7 @@ describe('CLI Usage', () => {
       const port = await findPort()
       let output = ''
       const app = await runNextCommandDev(
-        [dir, '-H', '0.0.0.0', '--port', port],
+        [dirBasic, '-H', '0.0.0.0', '--port', port],
         undefined,
         {
           onStdout(msg) {
@@ -508,8 +588,74 @@ describe('CLI Usage', () => {
         }
       )
       try {
-        await check(() => output, new RegExp(`on 0.0.0.0:${port}`))
+        await check(
+          () => output,
+          new RegExp(`Network:\\s*http://0.0.0.0:${port}`)
+        )
         await check(() => output, new RegExp(`http://localhost:${port}`))
+      } finally {
+        await killApp(app)
+      }
+    })
+
+    // only runs on CI as it requires administrator privileges
+    test('--experimental-https', async () => {
+      if (!process.env.CI) {
+        console.warn(
+          '--experimental-https only runs on CI as it requires administrator privileges'
+        )
+
+        return
+      }
+
+      const port = await findPort()
+      let output = ''
+      const app = await runNextCommandDev(
+        [dirBasic, '--experimental-https', '--port', port],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+        }
+      )
+      try {
+        await check(() => output, /Network:\s*http:\/\/\[::\]:(\d+)/)
+        await check(() => output, /https:\/\/localhost:(\d+)/)
+        await check(() => output, /Certificates created in/)
+      } finally {
+        await killApp(app)
+      }
+    })
+
+    test('--experimental-https with provided key/cert', async () => {
+      const keyFile = path.resolve(
+        __dirname,
+        '../certificates/localhost-key.pem'
+      )
+      const certFile = path.resolve(__dirname, '../certificates/localhost.pem')
+      const port = await findPort()
+      let output = ''
+      const app = await runNextCommandDev(
+        [
+          dirBasic,
+          '--experimental-https',
+          '--experimental-https-key',
+          keyFile,
+          '--experimental-https-cert',
+          certFile,
+          '--port',
+          port,
+        ],
+        undefined,
+        {
+          onStdout(msg) {
+            output += stripAnsi(msg)
+          },
+        }
+      )
+      try {
+        await check(() => output, /https:\/\/localhost:(\d+)/)
       } finally {
         await killApp(app)
       }
@@ -519,7 +665,7 @@ describe('CLI Usage', () => {
       const port = await findPort()
       let output = ''
       const app = await runNextCommandDev(
-        [dir, '--hostname', '::', '--port', port],
+        [dirBasic, '--hostname', '::', '--port', port],
         undefined,
         {
           onStdout(msg) {
@@ -528,7 +674,11 @@ describe('CLI Usage', () => {
         }
       )
       try {
-        await check(() => output, new RegExp(`on \\[::\\]:${port}`))
+        // Only display when hostname is provided
+        await check(
+          () => output,
+          new RegExp(`Network:\\s*\\http://\\[::\\]:${port}`)
+        )
         await check(() => output, new RegExp(`http://\\[::1\\]:${port}`))
       } finally {
         await killApp(app).catch(() => {})
@@ -550,19 +700,11 @@ describe('CLI Usage', () => {
 
     test('should exit when SIGINT is signalled', async () => {
       const port = await findPort()
-      await testExitSignal(
-        'SIGINT',
-        ['dev', dir, '-p', port],
-        /started server on/
-      )
+      await testExitSignal('SIGINT', ['dev', dirBasic, '-p', port], /- Local:/)
     })
     test('should exit when SIGTERM is signalled', async () => {
       const port = await findPort()
-      await testExitSignal(
-        'SIGTERM',
-        ['dev', dir, '-p', port],
-        /started server on/
-      )
+      await testExitSignal('SIGTERM', ['dev', dirBasic, '-p', port], /- Local:/)
     })
 
     test('invalid directory', async () => {
@@ -647,6 +789,30 @@ describe('CLI Usage', () => {
   })
 
   describe('info', () => {
+    function matchInfoOutput(stdout, { nextConfigOutput = '.*' } = {}) {
+      expect(stdout).toMatch(
+        new RegExp(`
+Operating System:
+  Platform: .*
+  Arch: .*
+  Version: .*
+Binaries:
+  Node: .*
+  npm: .*
+  Yarn: .*
+  pnpm: .*
+Relevant Packages:
+  next: .*
+  eslint-config-next: .*
+  react: .*
+  react-dom: .*
+  typescript: .*
+Next.js Config:
+  output: ${nextConfigOutput}
+`)
+      )
+    }
+
     test('--help', async () => {
       const help = await runNextCommand(['info', '--help'], {
         stdout: true,
@@ -670,26 +836,37 @@ describe('CLI Usage', () => {
         stdout: true,
         stderr: true,
       })
-      expect((info.stderr || '').toLowerCase()).not.toContain('error')
 
-      expect(info.stdout).toMatch(
-        new RegExp(`
-    Operating System:
-      Platform: .*
-      Arch: .*
-      Version: .*
-    Binaries:
-      Node: .*
-      npm: .*
-      Yarn: .*
-      pnpm: .*
-    Relevant packages:
-      next: .*
-      eslint-config-next: .*
-      react: .*
-      react-dom: .*
-`)
-      )
+      expect((info.stderr || '').toLowerCase()).not.toContain('error')
+      matchInfoOutput(info.stdout)
+    })
+
+    test('should print output with next.config.mjs', async () => {
+      let info = { stdout: '', stderr: '' }
+
+      try {
+        await fs.writeFile(
+          join(dirBasic, 'next.config.mjs'),
+          `export default { output: 'standalone' }`
+        )
+        await fs.writeFile(
+          join(dirBasic, 'package.json'),
+          JSON.stringify({
+            type: 'module',
+          })
+        )
+        info = await runNextCommand(['info'], {
+          cwd: dirBasic,
+          stdout: true,
+          stderr: true,
+        })
+      } finally {
+        await fs.remove(join(dirBasic, 'next.config.mjs'))
+        await fs.remove(join(dirBasic, 'package.json'))
+      }
+
+      expect((info.stderr || '').toLowerCase()).not.toContain('error')
+      matchInfoOutput(info.stdout, { nextConfigOutput: 'standalone' })
     })
   })
 })

@@ -1,4 +1,4 @@
-import chalk from 'next/dist/compiled/chalk'
+import { bold, cyan, magenta } from '../lib/picocolors'
 import Conf from 'next/dist/compiled/conf'
 import { BinaryLike, createHash, randomBytes } from 'crypto'
 import isDockerFunction from 'next/dist/compiled/is-docker'
@@ -58,10 +58,11 @@ function getStorageDirectory(distDir: string): string | undefined {
 }
 
 export class Telemetry {
+  readonly sessionId: string
+
   private conf: Conf<any> | null
   private distDir: string
-  private sessionId: string
-  private rawProjectId: string
+  private loadProjectId: undefined | string | Promise<string>
   private NEXT_TELEMETRY_DISABLED: any
   private NEXT_TELEMETRY_DEBUG: any
 
@@ -84,8 +85,6 @@ export class Telemetry {
       this.conf = null
     }
     this.sessionId = randomBytes(32).toString('hex')
-    this.rawProjectId = getRawProjectId()
-
     this.queue = new Set()
 
     this.notify()
@@ -106,8 +105,8 @@ export class Telemetry {
     this.conf.set(TELEMETRY_KEY_NOTIFY_DATE, Date.now().toString())
 
     console.log(
-      `${chalk.magenta.bold(
-        'Attention'
+      `${magenta(
+        bold('Attention')
       )}: Next.js now collects completely anonymous telemetry regarding usage.`
     )
     console.log(
@@ -116,7 +115,7 @@ export class Telemetry {
     console.log(
       `You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:`
     )
-    console.log(chalk.cyan('https://nextjs.org/telemetry'))
+    console.log(cyan('https://nextjs.org/telemetry'))
     console.log()
   }
 
@@ -176,8 +175,9 @@ export class Telemetry {
     return hash.digest('hex')
   }
 
-  private get projectId(): string {
-    return this.oneWayHash(this.rawProjectId)
+  private async getProjectId(): Promise<string> {
+    this.loadProjectId = this.loadProjectId || getRawProjectId()
+    return this.oneWayHash(await this.loadProjectId)
   }
 
   record = (
@@ -270,7 +270,7 @@ export class Telemetry {
     })
   }
 
-  private submitRecord = (
+  private submitRecord = async (
     _events: TelemetryEvent | TelemetryEvent[]
   ): Promise<any> => {
     let events: TelemetryEvent[]
@@ -303,7 +303,7 @@ export class Telemetry {
 
     const context: EventContext = {
       anonymousId: this.anonymousId,
-      projectId: this.projectId,
+      projectId: await this.getProjectId(),
       sessionId: this.sessionId,
     }
     const meta: EventMeta = getAnonymousMeta()
