@@ -19,610 +19,342 @@ overrides:
 importers:
 
   .:
+    specifiers:
+      '@babel/core': 7.18.0
+      '@babel/eslint-parser': 7.18.2
+      '@babel/generator': 7.18.0
+      '@babel/parser': 7.18.0
+      '@babel/plugin-proposal-object-rest-spread': 7.14.7
+      '@babel/preset-flow': 7.14.5
+      '@babel/preset-react': 7.14.5
+      '@edge-runtime/jest-environment': 2.2.1
+      '@fullhuman/postcss-purgecss': 1.3.0
+      '@mdx-js/loader': 2.2.1
+      '@mdx-js/react': 2.2.1
+      '@next/bundle-analyzer': workspace:*
+      '@next/env': workspace:*
+      '@next/eslint-plugin-next': workspace:*
+      '@next/font': workspace:*
+      '@next/mdx': workspace:*
+      '@next/plugin-storybook': workspace:*
+      '@next/polyfill-module': workspace:*
+      '@next/polyfill-nomodule': workspace:*
+      '@next/swc': workspace:*
+      '@opentelemetry/api': 1.4.1
+      '@svgr/webpack': 5.5.0
+      '@swc/cli': 0.1.55
+      '@swc/core': 1.3.55
+      '@swc/helpers': 0.5.1
+      '@testing-library/react': 13.0.0
+      '@types/cheerio': 0.22.16
+      '@types/fs-extra': 8.1.0
+      '@types/html-validator': 5.0.3
+      '@types/http-proxy': 1.17.3
+      '@types/jest': 24.0.13
+      '@types/node': 20.2.5
+      '@types/node-fetch': 2.6.1
+      '@types/react': 18.2.7
+      '@types/react-dom': 18.2.4
+      '@types/relay-runtime': 13.0.0
+      '@types/selenium-webdriver': 4.0.15
+      '@types/sharp': 0.29.3
+      '@types/string-hash': 1.1.1
+      '@types/trusted-types': 2.0.3
+      '@typescript-eslint/eslint-plugin': 4.29.1
+      '@typescript-eslint/parser': 4.29.1
+      '@vercel/fetch': 6.1.1
+      '@vercel/og': 0.5.6
+      '@zeit/next-typescript': 1.1.2-canary.0
+      abort-controller: 3.0.0
+      alex: 9.1.0
+      amphtml-validator: 1.0.35
+      ansi-escapes: 4.3.2
+      async-sema: 3.0.1
+      body-parser: 1.20.1
+      browserslist: 4.20.2
+      buffer: 5.6.0
+      chalk: 5.0.1
+      cheerio: 0.22.0
+      cookie: 0.4.1
+      cors: 2.8.5
+      coveralls: 3.0.3
+      create-next-app: workspace:*
+      critters: 0.0.6
+      cross-env: 6.0.3
+      cross-spawn: 6.0.5
+      dd-trace: 4.1.0
+      es5-ext: 0.10.53
+      escape-string-regexp: 2.0.0
+      eslint: 7.24.0
+      eslint-config-next: workspace:*
+      eslint-plugin-eslint-plugin: 4.3.0
+      eslint-plugin-import: 2.22.1
+      eslint-plugin-jest: 24.3.5
+      eslint-plugin-jsdoc: 39.6.4
+      eslint-plugin-react: 7.23.2
+      eslint-plugin-react-hooks: 4.5.0
+      event-stream: 4.0.1
+      execa: 2.0.3
+      expect-type: 0.14.2
+      express: 4.17.0
+      faker: 5.5.3
+      faunadb: 2.6.1
+      find-up: 4.1.0
+      firebase: 7.14.5
+      flat: 5.0.2
+      form-data: 4.0.0
+      fs-extra: 9.0.0
+      get-port: 5.1.1
+      glob: 7.1.6
+      gzip-size: 5.1.1
+      html-validator: 5.1.18
+      http-proxy: 1.18.1
+      husky: 8.0.0
+      image-size: 0.9.3
+      is-animated: 2.0.2
+      isomorphic-unfetch: 3.0.0
+      jest: 27.0.6
+      jest-extended: 1.2.1
+      jest-junit: 16.0.0
+      json5: 2.2.3
+      ky: 0.19.1
+      ky-universal: 0.6.0
+      lerna: 4.0.0
+      lint-staged: 10.1.7
+      lodash: 4.17.21
+      lost: 8.3.1
+      minimatch: 3.0.4
+      moment: ^2.24.0
+      nanoid: 3.1.30
+      next: workspace:*
+      node-fetch: 2.6.7
+      node-pty: 0.10.1
+      npm-run-all: 4.1.5
+      nprogress: 0.2.0
+      open: 9.0.0
+      outdent: 0.8.0
+      pixrem: 5.0.0
+      playwright-chromium: 1.28.1
+      plop: 3.0.5
+      postcss: 8.4.14
+      postcss-nested: 4.2.1
+      postcss-pseudoelements: 5.0.0
+      postcss-short-size: 4.0.0
+      postcss-trolling: 0.1.7
+      prettier: 2.8.8
+      pretty-bytes: 5.3.0
+      pretty-ms: 7.0.0
+      random-seed: 0.3.0
+      react: 18.2.0
+      react-17: npm:react@17.0.2
+      react-builtin: npm:react@18.3.0-canary-1cea38448-20230530
+      react-dom: 18.2.0
+      react-dom-17: npm:react-dom@17.0.2
+      react-dom-builtin: npm:react-dom@18.3.0-canary-1cea38448-20230530
+      react-dom-experimental-builtin: npm:react-dom@0.0.0-experimental-1cea38448-20230530
+      react-experimental-builtin: npm:react@0.0.0-experimental-1cea38448-20230530
+      react-server-dom-webpack: 18.3.0-canary-1cea38448-20230530
+      react-server-dom-webpack-experimental: npm:react-server-dom-webpack@0.0.0-experimental-1cea38448-20230530
+      react-ssr-prepass: 1.0.8
+      react-virtualized: 9.22.3
+      relay-compiler: 13.0.2
+      relay-runtime: 13.0.2
+      release: 6.3.1
+      request-promise-core: 1.1.2
+      resolve-from: 5.0.0
+      sass: 1.54.0
+      satori: 0.9.1
+      scheduler-builtin: npm:scheduler@0.24.0-canary-1cea38448-20230530
+      scheduler-experimental-builtin: npm:scheduler@0.0.0-experimental-1cea38448-20230530
+      seedrandom: 3.0.5
+      selenium-webdriver: 4.0.0-beta.4
+      semver: 7.3.7
+      shell-quote: 1.7.3
+      strip-ansi: 6.0.0
+      styled-components: 6.0.0-rc.3
+      styled-jsx: 5.1.1
+      styled-jsx-plugin-postcss: 3.0.2
+      swr: ^2.0.0
+      tailwindcss: 3.2.7
+      taskr: 1.1.0
+      tree-kill: 1.2.2
+      tsec: 0.2.1
+      turbo: 1.9.6
+      typescript: 5.1.3
+      unfetch: 4.2.0
+      wait-port: 0.2.2
+      webpack: 5.86.0
+      webpack-bundle-analyzer: 4.7.0
+      whatwg-fetch: 3.0.0
+      ws: 8.2.3
     devDependencies:
-      '@babel/core':
-        specifier: 7.18.0
-        version: 7.18.0
-      '@babel/eslint-parser':
-        specifier: 7.18.2
-        version: 7.18.2(@babel/core@7.18.0)(eslint@7.24.0)
-      '@babel/generator':
-        specifier: 7.18.0
-        version: 7.18.0
-      '@babel/parser':
-        specifier: 7.18.0
-        version: 7.18.0
-      '@babel/plugin-proposal-object-rest-spread':
-        specifier: 7.14.7
-        version: 7.14.7(@babel/core@7.18.0)
-      '@babel/preset-flow':
-        specifier: 7.14.5
-        version: 7.14.5(@babel/core@7.18.0)
-      '@babel/preset-react':
-        specifier: 7.14.5
-        version: 7.14.5(@babel/core@7.18.0)
-      '@edge-runtime/jest-environment':
-        specifier: 2.3.0
-        version: 2.3.0
-      '@emotion/cache':
-        specifier: 11.11.0
-        version: 11.11.0
-      '@emotion/react':
-        specifier: 11.11.1
-        version: 11.11.1(@types/react@18.2.7)(react@18.2.0)
-      '@fullhuman/postcss-purgecss':
-        specifier: 1.3.0
-        version: 1.3.0
-      '@mdx-js/loader':
-        specifier: 2.2.1
-        version: 2.2.1(webpack@5.86.0)
-      '@mdx-js/react':
-        specifier: 2.2.1
-        version: 2.2.1(react@18.2.0)
-      '@next/bundle-analyzer':
-        specifier: workspace:*
-        version: link:packages/next-bundle-analyzer
-      '@next/env':
-        specifier: workspace:*
-        version: link:packages/next-env
-      '@next/eslint-plugin-next':
-        specifier: workspace:*
-        version: link:packages/eslint-plugin-next
-      '@next/font':
-        specifier: workspace:*
-        version: link:packages/font
-      '@next/mdx':
-        specifier: workspace:*
-        version: link:packages/next-mdx
-      '@next/plugin-storybook':
-        specifier: workspace:*
-        version: link:packages/next-plugin-storybook
-      '@next/polyfill-module':
-        specifier: workspace:*
-        version: link:packages/next-polyfill-module
-      '@next/polyfill-nomodule':
-        specifier: workspace:*
-        version: link:packages/next-polyfill-nomodule
-      '@next/swc':
-        specifier: workspace:*
-        version: link:packages/next-swc
-      '@next/third-parties':
-        specifier: workspace:*
-        version: link:packages/third-parties
-      '@opentelemetry/api':
-        specifier: 1.4.1
-        version: 1.4.1
-      '@picocss/pico':
-        specifier: 1.5.10
-        version: 1.5.10
-      '@svgr/webpack':
-        specifier: 5.5.0
-        version: 5.5.0
-      '@swc/cli':
-        specifier: 0.1.55
-        version: 0.1.55(@swc/core@1.3.85)
-      '@swc/core':
-        specifier: 1.3.85
-        version: 1.3.85(@swc/helpers@0.5.2)
-      '@swc/helpers':
-        specifier: 0.5.2
-        version: 0.5.2
-      '@testing-library/jest-dom':
-        specifier: 6.1.2
-        version: 6.1.2(@types/jest@27.4.1)(jest@27.0.6)
-      '@testing-library/react':
-        specifier: 13.0.0
-        version: 13.0.0(react-dom@18.2.0)(react@18.2.0)
-      '@types/cheerio':
-        specifier: 0.22.16
-        version: 0.22.16
-      '@types/cookie':
-        specifier: 0.3.3
-        version: 0.3.3
-      '@types/cross-spawn':
-        specifier: 6.0.0
-        version: 6.0.0
-      '@types/fs-extra':
-        specifier: 8.1.0
-        version: 8.1.0
-      '@types/glob':
-        specifier: 7.1.1
-        version: 7.1.1
-      '@types/html-validator':
-        specifier: 5.0.3
-        version: 5.0.3
-      '@types/http-proxy':
-        specifier: 1.17.3
-        version: 1.17.3
-      '@types/jest':
-        specifier: 27.4.1
-        version: 27.4.1
-      '@types/node':
-        specifier: 20.2.5
-        version: 20.2.5
-      '@types/node-fetch':
-        specifier: 2.6.1
-        version: 2.6.1
-      '@types/react':
-        specifier: 18.2.7
-        version: 18.2.7
-      '@types/react-dom':
-        specifier: 18.2.4
-        version: 18.2.4
-      '@types/relay-runtime':
-        specifier: 14.1.13
-        version: 14.1.13
-      '@types/selenium-webdriver':
-        specifier: 4.0.15
-        version: 4.0.15
-      '@types/sharp':
-        specifier: 0.29.3
-        version: 0.29.3
-      '@types/string-hash':
-        specifier: 1.1.1
-        version: 1.1.1
-      '@types/trusted-types':
-        specifier: 2.0.3
-        version: 2.0.3
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.1.0
-        version: 6.1.0(@typescript-eslint/parser@6.1.0)(eslint@7.24.0)(typescript@5.2.2)
-      '@typescript-eslint/parser':
-        specifier: 6.1.0
-        version: 6.1.0(eslint@7.24.0)(typescript@5.2.2)
-      '@vercel/fetch':
-        specifier: 6.1.1
-        version: 6.1.1(@types/node-fetch@2.6.1)(node-fetch@2.6.7)
-      '@vercel/og':
-        specifier: 0.5.15
-        version: 0.5.15
-      abort-controller:
-        specifier: 3.0.0
-        version: 3.0.0
-      alex:
-        specifier: 9.1.0
-        version: 9.1.0
-      amphtml-validator:
-        specifier: 1.0.35
-        version: 1.0.35
-      ansi-escapes:
-        specifier: 4.3.2
-        version: 4.3.2
-      async-sema:
-        specifier: 3.0.1
-        version: 3.0.1
-      browserslist:
-        specifier: 4.20.2
-        version: 4.20.2
-      buffer:
-        specifier: 5.6.0
-        version: 5.6.0
-      cheerio:
-        specifier: 0.22.0
-        version: 0.22.0
-      cookie:
-        specifier: 0.4.1
-        version: 0.4.1
-      cors:
-        specifier: 2.8.5
-        version: 2.8.5
-      coveralls:
-        specifier: 3.0.3
-        version: 3.0.3
-      create-next-app:
-        specifier: workspace:*
-        version: link:packages/create-next-app
-      critters:
-        specifier: 0.0.6
-        version: 0.0.6
-      cross-env:
-        specifier: 6.0.3
-        version: 6.0.3
-      cross-spawn:
-        specifier: 6.0.5
-        version: 6.0.5
-      dd-trace:
-        specifier: 4.12.0
-        version: 4.12.0
-      es5-ext:
-        specifier: 0.10.53
-        version: 0.10.53
-      escape-string-regexp:
-        specifier: 2.0.0
-        version: 2.0.0
-      eslint:
-        specifier: 7.24.0
-        version: 7.24.0
-      eslint-config-next:
-        specifier: workspace:*
-        version: link:packages/eslint-config-next
-      eslint-plugin-eslint-plugin:
-        specifier: 4.3.0
-        version: 4.3.0(eslint@7.24.0)
-      eslint-plugin-import:
-        specifier: 2.22.1
-        version: 2.22.1(@typescript-eslint/parser@6.1.0)(eslint@7.24.0)
-      eslint-plugin-jest:
-        specifier: 24.3.5
-        version: 24.3.5(@typescript-eslint/eslint-plugin@6.1.0)(eslint@7.24.0)(typescript@5.2.2)
-      eslint-plugin-jsdoc:
-        specifier: 39.6.4
-        version: 39.6.4(eslint@7.24.0)
-      eslint-plugin-react:
-        specifier: 7.23.2
-        version: 7.23.2(eslint@7.24.0)
-      eslint-plugin-react-hooks:
-        specifier: 4.5.0
-        version: 4.5.0(eslint@7.24.0)
-      event-stream:
-        specifier: 4.0.1
-        version: 4.0.1
-      execa:
-        specifier: 2.0.3
-        version: 2.0.3
-      expect-type:
-        specifier: 0.14.2
-        version: 0.14.2
-      express:
-        specifier: 4.17.0
-        version: 4.17.0
-      faker:
-        specifier: 5.5.3
-        version: 5.5.3
-      faunadb:
-        specifier: 2.6.1
-        version: 2.6.1
-      find-up:
-        specifier: 4.1.0
-        version: 4.1.0
-      firebase:
-        specifier: 7.14.5
-        version: 7.14.5
-      flat:
-        specifier: 5.0.2
-        version: 5.0.2
-      form-data:
-        specifier: 4.0.0
-        version: 4.0.0
-      fs-extra:
-        specifier: 9.0.0
-        version: 9.0.0
-      get-port:
-        specifier: 5.1.1
-        version: 5.1.1
-      get-port-please:
-        specifier: 3.1.1
-        version: 3.1.1
-      glob:
-        specifier: 7.1.6
-        version: 7.1.6
-      gzip-size:
-        specifier: 5.1.1
-        version: 5.1.1
-      html-validator:
-        specifier: 5.1.18
-        version: 5.1.18
-      http-proxy:
-        specifier: 1.18.1
-        version: 1.18.1
-      husky:
-        specifier: 8.0.0
-        version: 8.0.0
-      image-size:
-        specifier: 0.9.3
-        version: 0.9.3
-      is-animated:
-        specifier: 2.0.2
-        version: 2.0.2
-      isomorphic-unfetch:
-        specifier: 3.0.0
-        version: 3.0.0
-      jest:
-        specifier: 27.0.6
-        version: 27.0.6
-      jest-extended:
-        specifier: 1.2.1
-        version: 1.2.1
-      jest-junit:
-        specifier: 16.0.0
-        version: 16.0.0
-      json5:
-        specifier: 2.2.3
-        version: 2.2.3
-      ky:
-        specifier: 0.19.1
-        version: 0.19.1
-      ky-universal:
-        specifier: 0.6.0
-        version: 0.6.0(ky@0.19.1)
-      lerna:
-        specifier: 4.0.0
-        version: 4.0.0
-      lint-staged:
-        specifier: 10.1.7
-        version: 10.1.7
-      lodash:
-        specifier: 4.17.20
-        version: 4.17.20
-      lost:
-        specifier: 8.3.1
-        version: 8.3.1
-      minimatch:
-        specifier: 3.0.4
-        version: 3.0.4
-      moment:
-        specifier: ^2.24.0
-        version: 2.24.0
-      nanoid:
-        specifier: 3.1.30
-        version: 3.1.30
-      next:
-        specifier: workspace:*
-        version: link:packages/next
-      node-fetch:
-        specifier: 2.6.7
-        version: 2.6.7
-      npm-run-all:
-        specifier: 4.1.5
-        version: 4.1.5
-      nprogress:
-        specifier: 0.2.0
-        version: 0.2.0
-      octokit:
-        specifier: 3.1.0
-        version: 3.1.0
-      open:
-        specifier: 9.0.0
-        version: 9.0.0
-      outdent:
-        specifier: 0.8.0
-        version: 0.8.0
-      pixrem:
-        specifier: 5.0.0
-        version: 5.0.0
-      playwright-chromium:
-        specifier: 1.35.1
-        version: 1.35.1
-      playwright-core:
-        specifier: 1.35.1
-        version: 1.35.1
-      plop:
-        specifier: 3.0.5
-        version: 3.0.5
-      postcss:
-        specifier: 8.4.14
-        version: 8.4.14
-      postcss-nested:
-        specifier: 4.2.1
-        version: 4.2.1
-      postcss-pseudoelements:
-        specifier: 5.0.0
-        version: 5.0.0
-      postcss-short-size:
-        specifier: 4.0.0
-        version: 4.0.0
-      postcss-trolling:
-        specifier: 0.1.7
-        version: 0.1.7
-      prettier:
-        specifier: 2.8.8
-        version: 2.8.8
-      pretty-bytes:
-        specifier: 5.3.0
-        version: 5.3.0
-      pretty-ms:
-        specifier: 7.0.0
-        version: 7.0.0
-      random-seed:
-        specifier: 0.3.0
-        version: 0.3.0
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-17:
-        specifier: npm:react@17.0.2
-        version: /react@17.0.2
-      react-builtin:
-        specifier: npm:react@18.3.0-canary-09285d5a7-20230925
-        version: /react@18.3.0-canary-09285d5a7-20230925
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-dom-17:
-        specifier: npm:react-dom@17.0.2
-        version: /react-dom@17.0.2(react@18.2.0)
-      react-dom-builtin:
-        specifier: npm:react-dom@18.3.0-canary-09285d5a7-20230925
-        version: /react-dom@18.3.0-canary-09285d5a7-20230925(react@18.2.0)
-      react-dom-experimental-builtin:
-        specifier: npm:react-dom@0.0.0-experimental-09285d5a7-20230925
-        version: /react-dom@0.0.0-experimental-09285d5a7-20230925(react@18.2.0)
-      react-experimental-builtin:
-        specifier: npm:react@0.0.0-experimental-09285d5a7-20230925
-        version: /react@0.0.0-experimental-09285d5a7-20230925
-      react-server-dom-webpack:
-        specifier: 18.3.0-canary-09285d5a7-20230925
-        version: 18.3.0-canary-09285d5a7-20230925(react-dom@18.2.0)(react@18.2.0)(webpack@5.86.0)
-      react-server-dom-webpack-experimental:
-        specifier: npm:react-server-dom-webpack@0.0.0-experimental-09285d5a7-20230925
-        version: /react-server-dom-webpack@0.0.0-experimental-09285d5a7-20230925(react-dom@18.2.0)(react@18.2.0)(webpack@5.86.0)
-      react-ssr-prepass:
-        specifier: 1.0.8
-        version: 1.0.8(react-is@16.13.1)(react@18.2.0)
-      react-virtualized:
-        specifier: 9.22.3
-        version: 9.22.3(react-dom@18.2.0)(react@18.2.0)
-      relay-compiler:
-        specifier: 13.0.2
-        version: 13.0.2
-      relay-runtime:
-        specifier: 13.0.2
-        version: 13.0.2
-      release:
-        specifier: 6.3.1
-        version: 6.3.1
-      request-promise-core:
-        specifier: 1.1.2
-        version: 1.1.2(request@2.88.2)
-      resolve-from:
-        specifier: 5.0.0
-        version: 5.0.0
-      sass:
-        specifier: 1.54.0
-        version: 1.54.0
-      satori:
-        specifier: 0.10.6
-        version: 0.10.6
-      scheduler-builtin:
-        specifier: npm:scheduler@0.24.0-canary-09285d5a7-20230925
-        version: /scheduler@0.24.0-canary-09285d5a7-20230925
-      scheduler-experimental-builtin:
-        specifier: npm:scheduler@0.0.0-experimental-09285d5a7-20230925
-        version: /scheduler@0.0.0-experimental-09285d5a7-20230925
-      seedrandom:
-        specifier: 3.0.5
-        version: 3.0.5
-      selenium-webdriver:
-        specifier: 4.0.0-beta.4
-        version: 4.0.0-beta.4
-      semver:
-        specifier: 7.3.7
-        version: 7.3.7
-      shell-quote:
-        specifier: 1.7.3
-        version: 1.7.3
-      strip-ansi:
-        specifier: 6.0.0
-        version: 6.0.0
-      styled-components:
-        specifier: 6.0.0-rc.3
-        version: 6.0.0-rc.3(react-dom@18.2.0)(react@18.2.0)
-      styled-jsx:
-        specifier: 5.1.1
-        version: 5.1.1(@babel/core@7.18.0)(react@18.2.0)
-      styled-jsx-plugin-postcss:
-        specifier: 3.0.2
-        version: 3.0.2
-      swr:
-        specifier: ^2.0.0
-        version: 2.0.0(react@18.2.0)
-      tailwindcss:
-        specifier: 3.2.7
-        version: 3.2.7(postcss@8.4.14)
-      taskr:
-        specifier: 1.1.0
-        version: 1.1.0
-      tree-kill:
-        specifier: 1.2.2
-        version: 1.2.2
-      tsec:
-        specifier: 0.2.1
-        version: 0.2.1(@bazel/bazelisk@1.18.0)(typescript@5.2.2)
-      turbo:
-        specifier: 1.10.9
-        version: 1.10.9
-      typescript:
-        specifier: 5.2.2
-        version: 5.2.2
-      unfetch:
-        specifier: 4.2.0
-        version: 4.2.0
-      wait-port:
-        specifier: 0.2.2
-        version: 0.2.2
-      webpack:
-        specifier: 5.86.0
-        version: 5.86.0(@swc/core@1.3.85)
-      webpack-bundle-analyzer:
-        specifier: 4.7.0
-        version: 4.7.0
-      whatwg-fetch:
-        specifier: 3.0.0
-        version: 3.0.0
-      ws:
-        specifier: 8.2.3
-        version: 8.2.3
-
-  bench/app-router-server:
-    dependencies:
-      next:
-        specifier: workspace:*
-        version: link:../../packages/next
-      next-minimal-server:
-        specifier: workspace:*
-        version: link:../next-minimal-server
-      webpack-bundle-analyzer:
-        specifier: ^4.6.1
-        version: 4.7.0
-      webpack-stats-plugin:
-        specifier: ^1.1.0
-        version: 1.1.0
-
-  bench/fuzzponent:
-    dependencies:
-      '@babel/generator':
-        specifier: 7.18.0
-        version: 7.18.0
-      '@babel/types':
-        specifier: 7.18.0
-        version: 7.18.0
-      random-seed:
-        specifier: 0.3.0
-        version: 0.3.0
-      yargs:
-        specifier: 16.2.0
-        version: 16.2.0
-
-  bench/nested-deps:
-    devDependencies:
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
-      fuzzponent:
-        specifier: workspace:*
-        version: link:../fuzzponent
-      next:
-        specifier: workspace:*
-        version: link:../../packages/next
-      pretty-ms:
-        specifier: ^7.0.1
-        version: 7.0.1
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-
-  bench/nested-deps-app-router:
-    devDependencies:
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
-      fuzzponent:
-        specifier: workspace:*
-        version: link:../fuzzponent
-      next:
-        specifier: workspace:*
-        version: link:../../packages/next
-      pretty-ms:
-        specifier: ^7.0.1
-        version: 7.0.1
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-
-  bench/next-minimal-server:
-    dependencies:
-      next:
-        specifier: workspace:*
-        version: link:../../packages/next
-
-  bench/rendering:
-    dependencies:
-      fs-extra:
-        specifier: 10.0.0
-        version: 10.0.0
-      recursive-copy:
-        specifier: 2.0.11
-        version: 2.0.11
+      '@babel/core': 7.18.0
+      '@babel/eslint-parser': 7.18.2_uxoojzahptggrua2tvdiqlh7xm
+      '@babel/generator': 7.18.0
+      '@babel/parser': 7.18.0
+      '@babel/plugin-proposal-object-rest-spread': 7.14.7_@babel+core@7.18.0
+      '@babel/preset-flow': 7.14.5_@babel+core@7.18.0
+      '@babel/preset-react': 7.14.5_@babel+core@7.18.0
+      '@edge-runtime/jest-environment': 2.2.1
+      '@fullhuman/postcss-purgecss': 1.3.0
+      '@mdx-js/loader': 2.2.1_webpack@5.86.0
+      '@mdx-js/react': 2.2.1_gi7g2e7ms2o7qu7rygm7ubc5wa
+      '@next/bundle-analyzer': link:packages/next-bundle-analyzer
+      '@next/env': link:packages/next-env
+      '@next/eslint-plugin-next': link:packages/eslint-plugin-next
+      '@next/font': link:packages/font
+      '@next/mdx': link:packages/next-mdx
+      '@next/plugin-storybook': link:packages/next-plugin-storybook
+      '@next/polyfill-module': link:packages/next-polyfill-module
+      '@next/polyfill-nomodule': link:packages/next-polyfill-nomodule
+      '@next/swc': link:packages/next-swc
+      '@opentelemetry/api': 1.4.1
+      '@svgr/webpack': 5.5.0
+      '@swc/cli': 0.1.55_@swc+core@1.3.55
+      '@swc/core': 1.3.55_@swc+helpers@0.5.1
+      '@swc/helpers': 0.5.1
+      '@testing-library/react': 13.0.0_yesnyxucz3hyuvbf6entktcbyq
+      '@types/cheerio': 0.22.16
+      '@types/fs-extra': 8.1.0
+      '@types/html-validator': 5.0.3
+      '@types/http-proxy': 1.17.3
+      '@types/jest': 24.0.13
+      '@types/node': 20.2.5
+      '@types/node-fetch': 2.6.1
+      '@types/react': 18.2.7
+      '@types/react-dom': 18.2.4
+      '@types/relay-runtime': 13.0.0
+      '@types/selenium-webdriver': 4.0.15
+      '@types/sharp': 0.29.3
+      '@types/string-hash': 1.1.1
+      '@types/trusted-types': 2.0.3
+      '@typescript-eslint/eslint-plugin': 4.29.1_wuj6uw3oq7f3smh22rfufwcjdq
+      '@typescript-eslint/parser': 4.29.1_gbw5sebpv3ij5sxvftfumdnkh4
+      '@vercel/fetch': 6.1.1_fii5qhbaymjqmfm7e2spxc5z4m
+      '@vercel/og': 0.5.6
+      '@zeit/next-typescript': 1.1.2-canary.0_@babel+core@7.18.0
+      abort-controller: 3.0.0
+      alex: 9.1.0
+      amphtml-validator: 1.0.35
+      ansi-escapes: 4.3.2
+      async-sema: 3.0.1
+      body-parser: 1.20.1
+      browserslist: 4.20.2
+      buffer: 5.6.0
+      chalk: 5.0.1
+      cheerio: 0.22.0
+      cookie: 0.4.1
+      cors: 2.8.5
+      coveralls: 3.0.3
+      create-next-app: link:packages/create-next-app
+      critters: 0.0.6
+      cross-env: 6.0.3
+      cross-spawn: 6.0.5
+      dd-trace: 4.1.0
+      es5-ext: 0.10.53
+      escape-string-regexp: 2.0.0
+      eslint: 7.24.0
+      eslint-config-next: link:packages/eslint-config-next
+      eslint-plugin-eslint-plugin: 4.3.0_eslint@7.24.0
+      eslint-plugin-import: 2.22.1_23iivq3ybsthf4qrv3kgatrvhe
+      eslint-plugin-jest: 24.3.5_z7e36df4atgbffvw5byni6pl5e
+      eslint-plugin-jsdoc: 39.6.4_eslint@7.24.0
+      eslint-plugin-react: 7.23.2_eslint@7.24.0
+      eslint-plugin-react-hooks: 4.5.0_eslint@7.24.0
+      event-stream: 4.0.1
+      execa: 2.0.3
+      expect-type: 0.14.2
+      express: 4.17.0
+      faker: 5.5.3
+      faunadb: 2.6.1
+      find-up: 4.1.0
+      firebase: 7.14.5
+      flat: 5.0.2
+      form-data: 4.0.0
+      fs-extra: 9.0.0
+      get-port: 5.1.1
+      glob: 7.1.6
+      gzip-size: 5.1.1
+      html-validator: 5.1.18
+      http-proxy: 1.18.1
+      husky: 8.0.0
+      image-size: 0.9.3
+      is-animated: 2.0.2
+      isomorphic-unfetch: 3.0.0
+      jest: 27.0.6
+      jest-extended: 1.2.1
+      jest-junit: 16.0.0
+      json5: 2.2.3
+      ky: 0.19.1
+      ky-universal: 0.6.0_ky@0.19.1
+      lerna: 4.0.0
+      lint-staged: 10.1.7
+      lodash: 4.17.21
+      lost: 8.3.1
+      minimatch: 3.0.4
+      moment: 2.24.0
+      nanoid: 3.1.30
+      next: link:packages/next
+      node-fetch: 2.6.7
+      node-pty: 0.10.1
+      npm-run-all: 4.1.5
+      nprogress: 0.2.0
+      open: 9.0.0
+      outdent: 0.8.0
+      pixrem: 5.0.0
+      playwright-chromium: 1.28.1
+      plop: 3.0.5
+      postcss: 8.4.14
+      postcss-nested: 4.2.1
+      postcss-pseudoelements: 5.0.0
+      postcss-short-size: 4.0.0
+      postcss-trolling: 0.1.7
+      prettier: 2.8.8
+      pretty-bytes: 5.3.0
+      pretty-ms: 7.0.0
+      random-seed: 0.3.0
+      react: 18.2.0
+      react-17: /react/17.0.2
+      react-builtin: /react/18.3.0-canary-1cea38448-20230530
+      react-dom: 18.2.0_gi7g2e7ms2o7qu7rygm7ubc5wa
+      react-dom-17: /react-dom/17.0.2_gi7g2e7ms2o7qu7rygm7ubc5wa
+      react-dom-builtin: /react-dom/18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
+      react-dom-experimental-builtin: /react-dom/0.0.0-experimental-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
+      react-experimental-builtin: /react/0.0.0-experimental-1cea38448-20230530
+      react-server-dom-webpack: 18.3.0-canary-1cea38448-20230530_zfjhkmrtmtfr633pd7mikky52a
+      react-server-dom-webpack-experimental: /react-server-dom-webpack/0.0.0-experimental-1cea38448-20230530_zfjhkmrtmtfr633pd7mikky52a
+      react-ssr-prepass: 1.0.8_wssc5p7xfu3gdebmwnsl6tjtse
+      react-virtualized: 9.22.3_yesnyxucz3hyuvbf6entktcbyq
+      relay-compiler: 13.0.2
+      relay-runtime: 13.0.2
+      release: 6.3.1
+      request-promise-core: 1.1.2_request@2.88.2
+      resolve-from: 5.0.0
+      sass: 1.54.0
+      satori: 0.9.1
+      scheduler-builtin: /scheduler/0.24.0-canary-1cea38448-20230530
+      scheduler-experimental-builtin: /scheduler/0.0.0-experimental-1cea38448-20230530
+      seedrandom: 3.0.5
+      selenium-webdriver: 4.0.0-beta.4
+      semver: 7.3.7
+      shell-quote: 1.7.3
+      strip-ansi: 6.0.0
+      styled-components: 6.0.0-rc.3_yesnyxucz3hyuvbf6entktcbyq
+      styled-jsx: 5.1.1_ccjkt4qrwy7jxiorlt7mb45b34
+      styled-jsx-plugin-postcss: 3.0.2
+      swr: 2.0.0_gi7g2e7ms2o7qu7rygm7ubc5wa
+      tailwindcss: 3.2.7_postcss@8.4.14
+      taskr: 1.1.0
+      tree-kill: 1.2.2
+      tsec: 0.2.1_dkdey2dwrlpwkjgtbjn4tvaria
+      turbo: 1.9.6
+      typescript: 5.1.3
+      unfetch: 4.2.0
+      wait-port: 0.2.2
+      webpack: 5.86.0_@swc+core@1.3.55
+      webpack-bundle-analyzer: 4.7.0
+      whatwg-fetch: 3.0.0
+      ws: 8.2.3
 
   bench/vercel:
     dependencies:
@@ -6632,7 +6364,7 @@ packages:
     dependencies:
       '@mdx-js/mdx': 2.2.1
       source-map: 0.7.3
-      webpack: 5.86.0(@swc/core@1.3.85)
+      webpack: 5.86.0_@swc+core@1.3.55
     transitivePeerDependencies:
       - supports-color
 
@@ -6659,7 +6391,17 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@mdx-js/react@2.2.1(react@18.2.0):
+  /@mdx-js/react/2.2.1_gi7g2e7ms2o7qu7rygm7ubc5wa:
+    resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      '@types/mdx': 2.0.3
+      '@types/react': 18.2.7
+      react: 18.3.0-canary-1cea38448-20230530
+    dev: true
+
+  /@mdx-js/react/2.2.1_react@18.2.0:
     resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}
     peerDependencies:
       react: '>=16'
@@ -6667,6 +6409,7 @@ packages:
       '@types/mdx': 2.0.3
       '@types/react': 18.2.7
       react: 18.2.0
+    dev: false
 
   /@mswjs/cookies@0.2.2:
     resolution: {integrity: sha512-mlN83YSrcFgk7Dm1Mys40DLssI1KdJji2CMKN8eOlBqsTADYzj2+jWzsANsUTFbxDMWPD5e9bfA1RGqBpS3O1g==}
@@ -7791,18 +7534,18 @@ packages:
       '@swc/helpers': 0.5.2
       '@swc/types': 0.1.4
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.3.85
-      '@swc/core-darwin-x64': 1.3.85
-      '@swc/core-linux-arm-gnueabihf': 1.3.85
-      '@swc/core-linux-arm64-gnu': 1.3.85
-      '@swc/core-linux-arm64-musl': 1.3.85
-      '@swc/core-linux-x64-gnu': 1.3.85
-      '@swc/core-linux-x64-musl': 1.3.85
-      '@swc/core-win32-arm64-msvc': 1.3.85
-      '@swc/core-win32-ia32-msvc': 1.3.85
-      '@swc/core-win32-x64-msvc': 1.3.85
+      '@swc/core-darwin-arm64': 1.3.55
+      '@swc/core-darwin-x64': 1.3.55
+      '@swc/core-linux-arm-gnueabihf': 1.3.55
+      '@swc/core-linux-arm64-gnu': 1.3.55
+      '@swc/core-linux-arm64-musl': 1.3.55
+      '@swc/core-linux-x64-gnu': 1.3.55
+      '@swc/core-linux-x64-musl': 1.3.55
+      '@swc/core-win32-arm64-msvc': 1.3.55
+      '@swc/core-win32-ia32-msvc': 1.3.55
+      '@swc/core-win32-x64-msvc': 1.3.55
 
-  /@swc/helpers@0.4.14:
+  /@swc/helpers/0.4.14:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.6.2
@@ -7866,37 +7609,7 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/jest-dom@6.1.2(@types/jest@27.4.1)(jest@27.0.6):
-    resolution: {integrity: sha512-NP9jl1Q2qDDtx+cqogowtQtmgD2OVs37iMSIsTv5eN5ETRkf26Kj6ugVwA93/gZzzFWQAsgkKkcftDe91BJCkQ==}
-    engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
-    peerDependencies:
-      '@jest/globals': '>= 28'
-      '@types/jest': '>= 28'
-      jest: '>= 28'
-      vitest: '>= 0.32'
-    peerDependenciesMeta:
-      '@jest/globals':
-        optional: true
-      '@types/jest':
-        optional: true
-      jest:
-        optional: true
-      vitest:
-        optional: true
-    dependencies:
-      '@adobe/css-tools': 4.3.1
-      '@babel/runtime': 7.15.4
-      '@types/jest': 27.4.1
-      aria-query: 5.3.0
-      chalk: 3.0.0
-      css.escape: 1.5.1
-      dom-accessibility-api: 0.5.13
-      jest: 27.0.6
-      lodash: 4.17.20
-      redent: 3.0.0
-    dev: true
-
-  /@testing-library/react@13.0.0(react-dom@18.2.0)(react@18.2.0):
+  /@testing-library/react/13.0.0_yesnyxucz3hyuvbf6entktcbyq:
     resolution: {integrity: sha512-p0lYA1M7uoEmk2LnCbZLGmHJHyH59sAaZVXChTXlyhV/PRW9LoIh4mdf7tiXsO8BoNG+vN8UnFJff1hbZeXv+w==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -7906,8 +7619,8 @@ packages:
       '@babel/runtime': 7.16.7
       '@testing-library/dom': 8.20.0
       '@types/react-dom': 18.2.4
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.0-canary-1cea38448-20230530
+      react-dom: 18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
     dev: true
 
   /@tootallnate/once@1.1.2:
@@ -15694,7 +15407,7 @@ packages:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.1.0
-      lodash: 4.17.21
+      lodash: 4.17.20
       mute-stream: 0.0.8
       run-async: 2.4.1
       rxjs: 6.6.2
@@ -22548,17 +22261,28 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
-  /react-dom@0.0.0-experimental-09285d5a7-20230925(react@18.2.0):
-    resolution: {integrity: sha512-WSQB0/bxHftOOCcGb2TWX2A4lPAH9jIHvdx1mJCgBbdc1c/BRSRhpv/d1stWkJ+cgimjoQY3d6oQHfwkAYiCVQ==}
+  /react-dom/0.0.0-experimental-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa:
+    resolution: {integrity: sha512-rix6VfqhsqW1C72M9m5ANs1hvZC9wpckL3T8oxi9AMjB4IxAjIWBvVfRlScfJIt5L1DBnj1OtO7qUG3JIVf5yw==}
     peerDependencies:
       react: 0.0.0-experimental-09285d5a7-20230925
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.0.0-experimental-09285d5a7-20230925
+      react: 18.3.0-canary-1cea38448-20230530
+      scheduler: 0.0.0-experimental-1cea38448-20230530
     dev: true
 
-  /react-dom@17.0.2(react@17.0.2):
+  /react-dom/17.0.2_gi7g2e7ms2o7qu7rygm7ubc5wa:
+    resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react: 18.3.0-canary-1cea38448-20230530
+      scheduler: 0.20.2
+    dev: true
+
+  /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
       react: 17.0.2
@@ -22569,15 +22293,14 @@ packages:
       scheduler: 0.20.2
     dev: false
 
-  /react-dom@17.0.2(react@18.2.0):
-    resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
+  /react-dom/18.2.0_gi7g2e7ms2o7qu7rygm7ubc5wa:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
-      react: 17.0.2
+      react: ^18.2.0
     dependencies:
       loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react: 18.2.0
-      scheduler: 0.20.2
+      react: 18.3.0-canary-1cea38448-20230530
+      scheduler: 0.23.0
     dev: true
 
   /react-dom@18.2.0(react@18.2.0):
@@ -22588,15 +22311,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
 
-  /react-dom@18.3.0-canary-09285d5a7-20230925(react@18.2.0):
-    resolution: {integrity: sha512-xPmczFUU4iQpWa5tC/ZbyTUTf5c2dsMp8stxeJa7B1BH6B1XGqR14lECi9oFvIIFgtQggN6dgAzrG0pVZr947A==}
+  /react-dom/18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa:
+    resolution: {integrity: sha512-rZM2gIE+zUBfWtb8lcUp8cjmX+A5mR7xvkhrjGX+y3hDwMeR3cfmKQInDxKKm98zfIwYUQl+7+GWLKHrAv6iFw==}
     peerDependencies:
       react: 18.3.0-canary-09285d5a7-20230925
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.24.0-canary-09285d5a7-20230925
+      react: 18.3.0-canary-1cea38448-20230530
+      scheduler: 0.24.0-canary-1cea38448-20230530
     dev: true
 
   /react-is@16.13.1:
@@ -22619,8 +22343,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-server-dom-webpack@0.0.0-experimental-09285d5a7-20230925(react-dom@18.2.0)(react@18.2.0)(webpack@5.86.0):
-    resolution: {integrity: sha512-LWI4TnUIT3wjDrtnruqe0f1aBLPf8arrBXCd3G/sZjdtX+WSJbBA0dYBOYH9YZrgeJKuKn/6kUYeoTR/BvcHbw==}
+  /react-server-dom-webpack/0.0.0-experimental-1cea38448-20230530_zfjhkmrtmtfr633pd7mikky52a:
+    resolution: {integrity: sha512-b9yBP7X/iM640xGFI5GsF49Rc3YT3UfUbvZnauW4hTWazmKon/ocD6eca4rZySmlPLfbxGYzg4FqXxcFhWq27A==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
       react: 0.0.0-experimental-09285d5a7-20230925
@@ -22629,14 +22353,14 @@ packages:
     dependencies:
       acorn-loose: 8.3.0
       loose-envify: 1.4.0
-      neo-async: 2.6.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      webpack: 5.86.0(@swc/core@1.3.85)
+      neo-async: 2.6.2
+      react: 18.3.0-canary-1cea38448-20230530
+      react-dom: 18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
+      webpack: 5.86.0_@swc+core@1.3.55
     dev: true
 
-  /react-server-dom-webpack@18.3.0-canary-09285d5a7-20230925(react-dom@18.2.0)(react@18.2.0)(webpack@5.86.0):
-    resolution: {integrity: sha512-XN9z85ioVUczmE8OanhMel2jtHe1xCIfxz68ouYyieX8WeBJNm5Z9oHPstJgsWCkiUDTneXlmtAvRQGUZ2kS2w==}
+  /react-server-dom-webpack/18.3.0-canary-1cea38448-20230530_zfjhkmrtmtfr633pd7mikky52a:
+    resolution: {integrity: sha512-Or28lwdk48LCGqkZ06G9p0LS9gJty5zuDKHs3vaE6dEWkJvXb5mGT7sN7ZbSQVfAQmUk8/ojt+SHdTKfd9BIAw==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
       react: 18.3.0-canary-09285d5a7-20230925
@@ -22645,24 +22369,46 @@ packages:
     dependencies:
       acorn-loose: 8.3.0
       loose-envify: 1.4.0
-      neo-async: 2.6.1
+      neo-async: 2.6.2
+      react: 18.3.0-canary-1cea38448-20230530
+      react-dom: 18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
+      webpack: 5.86.0_@swc+core@1.3.55
+    dev: true
+
+  /react-shallow-renderer/16.15.0_react@18.2.0:
+    resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      object-assign: 4.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       webpack: 5.86.0(@swc/core@1.3.85)
     dev: true
 
-  /react-ssr-prepass@1.0.8(react-is@16.13.1)(react@18.2.0):
+  /react-ssr-prepass/1.0.8_wssc5p7xfu3gdebmwnsl6tjtse:
     resolution: {integrity: sha512-O0gfRA1SaK+9ITKxqfnXsej2jF+OHGP/+GxD4unROQaM/0/UczGF9fuF+wTboxaQoKdIf4FvS3h/OigWh704VA==}
     peerDependencies:
       react: ^16.8.0
       react-is: ^16.8.0
     dependencies:
       object-is: 1.0.2
-      react: 18.2.0
+      react: 18.3.0-canary-1cea38448-20230530
       react-is: 16.13.1
     dev: true
 
-  /react-virtualized@9.22.3(react-dom@18.2.0)(react@18.2.0):
+  /react-test-renderer/18.2.0_react@18.2.0:
+    resolution: {integrity: sha512-JWD+aQ0lh2gvh4NM3bBM42Kx+XybOxCpgYK7F8ugAlpaTSnWsX+39Z4XkOykGZAHrjwwTZT3x3KxswVWxHPUqA==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      react: 18.2.0
+      react-is: 18.2.0
+      react-shallow-renderer: 16.15.0_react@18.2.0
+      scheduler: 0.23.0
+    dev: true
+
+  /react-virtualized/9.22.3_yesnyxucz3hyuvbf6entktcbyq:
     resolution: {integrity: sha512-MKovKMxWTcwPSxE1kK1HcheQTWfuCxAuBoSTf2gwyMM21NdX/PXUhnoP8Uc5dRKd+nKm8v41R36OellhdCpkrw==}
     peerDependencies:
       react: ^15.3.0 || ^16.0.0-alpha
@@ -22673,8 +22419,8 @@ packages:
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.0-canary-1cea38448-20230530
+      react-dom: 18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
       react-lifecycles-compat: 3.0.4
     dev: true
 
@@ -23240,7 +22986,7 @@ packages:
     peerDependencies:
       request: ^2.34
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.20
       request: 2.88.2
     dev: true
 
@@ -24761,7 +24507,7 @@ packages:
     dependencies:
       inline-style-parser: 0.1.1
 
-  /styled-components@6.0.0-rc.3(react-dom@18.2.0)(react@18.2.0):
+  /styled-components/6.0.0-rc.3_yesnyxucz3hyuvbf6entktcbyq:
     resolution: {integrity: sha512-5FbCTxynopck99GRwM5Ey0+VRp8pkQq69TwGOJJeYtR7gPvwGjNx8yBPLN7/dfxwwvn9ymOZYB19eQkv2k70wQ==}
     engines: {node: '>= 16'}
     peerDependencies:
@@ -24785,8 +24531,8 @@ packages:
       '@emotion/unitless': 0.8.1
       css-to-react-native: 3.2.0
       postcss: 8.4.24
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.0-canary-1cea38448-20230530
+      react-dom: 18.3.0-canary-1cea38448-20230530_gi7g2e7ms2o7qu7rygm7ubc5wa
       shallowequal: 1.1.0
       stylis: 4.2.0
       tslib: 2.5.3
@@ -24801,7 +24547,25 @@ packages:
       postcss-load-plugins: 2.3.0
     dev: true
 
-  /styled-jsx@5.1.1(@babel/core@7.18.0)(react@18.2.0):
+  /styled-jsx/5.1.1_ccjkt4qrwy7jxiorlt7mb45b34:
+    resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      babel-plugin-macros: '*'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
+      '@babel/core': 7.18.0
+      client-only: 0.0.1
+      react: 18.3.0-canary-1cea38448-20230530
+    dev: true
+
+  /styled-jsx/5.1.1_uuaxwgga6hqycsez5ok7v2wg4i:
     resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -24817,6 +24581,7 @@ packages:
       '@babel/core': 7.18.0
       client-only: 0.0.1
       react: 18.2.0
+    dev: false
 
   /stylehacks@4.0.3:
     resolution: {integrity: sha512-7GlLk9JwlElY4Y6a/rmbH2MhVlTyVmiJd1PfTCqFaIBEGMYNsrO/v3SeGTdhBThLg4Z+NbOk/qFMwCa+J+3p/g==}
@@ -24954,14 +24719,14 @@ packages:
       stable: 0.1.8
     dev: true
 
-  /swr@2.0.0(react@18.2.0):
+  /swr/2.0.0_gi7g2e7ms2o7qu7rygm7ubc5wa:
     resolution: {integrity: sha512-IhUx5yPkX+Fut3h0SqZycnaNLXLXsb2ECFq0Y29cxnK7d8r7auY2JWNbCW3IX+EqXUg3rwNJFlhrw5Ye/b6k7w==}
     engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
+      react: 18.3.0-canary-1cea38448-20230530
+      use-sync-external-store: 1.2.0_gi7g2e7ms2o7qu7rygm7ubc5wa
     dev: true
 
   /symbol-observable@1.0.1:
@@ -25143,7 +24908,7 @@ packages:
       schema-utils: 3.2.0
       serialize-javascript: 6.0.1
       terser: 5.17.7
-      webpack: 5.86.0(@swc/core@1.3.85)
+      webpack: 5.86.0_@swc+core@1.3.55
 
   /terser@5.10.0(acorn@8.8.2):
     resolution: {integrity: sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==}
@@ -26197,12 +25962,12 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /use-sync-external-store@1.2.0(react@18.2.0):
+  /use-sync-external-store/1.2.0_gi7g2e7ms2o7qu7rygm7ubc5wa:
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      react: 18.2.0
+      react: 18.3.0-canary-1cea38448-20230530
     dev: true
 
   /use@3.1.1:
