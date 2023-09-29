@@ -21,8 +21,8 @@ const handleOutput = (msg) => {
   output += msg
 }
 
-async function get$(path, query) {
-  const html = await renderViaHTTP(appPort, path, query)
+async function get$(path, query, options) {
+  const html = await renderViaHTTP(appPort, path, query, options)
   return cheerio.load(html)
 }
 
@@ -47,6 +47,19 @@ describe('TypeScript Features', () => {
     it('should render the cookies page', async () => {
       const $ = await get$('/ssr/cookies')
       expect($('#cookies').text()).toBe('{}')
+    })
+
+    it('should render the cookies page with cookies', async () => {
+      const $ = await get$(
+        '/ssr/cookies',
+        {},
+        {
+          headers: {
+            Cookie: 'key=value;',
+          },
+        }
+      )
+      expect($('#cookies').text()).toBe(`{"key":"value"}`)
     })
 
     it('should render the generics page', async () => {
@@ -92,6 +105,7 @@ export default function EvilPage(): JSX.Element {
 }
 `
         )
+        appPort = await findPort()
         app = await launchApp(appDir, appPort)
 
         const $ = await get$('/hello')
@@ -108,6 +122,29 @@ export default function EvilPage(): JSX.Element {
     expect(output.code).toBe(0)
   })
 
+  it('should build the app with functions in next.config.js', async () => {
+    const nextConfig = new File(join(appDir, 'next.config.js'))
+
+    nextConfig.write(`
+    module.exports = {
+      webpack(config) { return config },
+      onDemandEntries: {
+        // Make sure entries are not getting disposed.
+        maxInactiveAge: 1000 * 60 * 60,
+      },
+    }
+    `)
+
+    try {
+      const output = await nextBuild(appDir, [], { stdout: true })
+
+      expect(output.stdout).toMatch(/Compiled successfully/)
+      expect(output.code).toBe(0)
+    } finally {
+      nextConfig.restore()
+    }
+  })
+
   it('should not inform when using default tsconfig path', async () => {
     const output = await nextBuild(appDir, [], { stdout: true })
     expect(output.stdout).not.toMatch(/Using tsconfig file:/)
@@ -119,6 +156,7 @@ export default function EvilPage(): JSX.Element {
       try {
         errorPage.replace('static ', 'static async ')
         const output = await nextBuild(appDir, [], { stdout: true })
+
         expect(output.stdout).toMatch(/Compiled successfully/)
       } finally {
         errorPage.restore()
@@ -130,6 +168,7 @@ export default function EvilPage(): JSX.Element {
       try {
         page.replace(/async \(/g, '(')
         const output = await nextBuild(appDir, [], { stdout: true })
+
         expect(output.stdout).toMatch(/Compiled successfully/)
       } finally {
         page.restore()
