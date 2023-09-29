@@ -5,7 +5,7 @@ import { join } from 'path'
 import http from 'http'
 import webdriver from 'next-webdriver'
 import assert from 'assert'
-import { check, waitFor } from 'next-test-utils'
+import { check, renderViaHTTP, waitFor } from 'next-test-utils'
 
 describe('manual-client-base-path', () => {
   if ((global as any).isNextDeploy) {
@@ -98,6 +98,11 @@ describe('manual-client-base-path', () => {
     }
   })
 
+  it('should not warn for flag in output', async () => {
+    await renderViaHTTP(next.url, '/')
+    expect(next.cliOutput).not.toContain('exist in this version of Next.js')
+  })
+
   for (const [asPath, pathname, query] of [
     ['/'],
     ['/another'],
@@ -147,6 +152,14 @@ describe('manual-client-base-path', () => {
     expect(await browser.eval('window.location.pathname')).toBe('/')
 
     await browser.forward()
+    await check(() => browser.elementByCss('#page').text(), 'another page')
+    expect(await browser.eval('window.location.pathname')).toBe('/another')
+
+    await browser.back()
+    await check(() => browser.elementByCss('#page').text(), 'index page')
+    expect(await browser.eval('window.location.pathname')).toBe('/')
+
+    await browser.elementByCss('#to-another-slash').click()
     await check(() => browser.elementByCss('#page').text(), 'another page')
     expect(await browser.eval('window.location.pathname')).toBe('/another')
 

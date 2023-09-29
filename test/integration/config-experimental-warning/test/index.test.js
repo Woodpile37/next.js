@@ -1,61 +1,141 @@
 /* eslint-env jest */
 
 import { join } from 'path'
-import { nextBuild, File } from 'next-test-utils'
+import { killApp, launchApp, findPort, File } from 'next-test-utils'
 
 const appDir = join(__dirname, '..')
 const configFile = new File(join(appDir, '/next.config.js'))
+const configFileMjs = new File(join(appDir, '/next.config.mjs'))
 
-describe('Promise in next config', () => {
-  afterAll(() => configFile.delete())
+let app
+async function collectStdout(appDir) {
+  let stdout = ''
+  const port = await findPort()
+  app = await launchApp(appDir, port, {
+    onStdout(msg) {
+      stdout += msg
+    },
+  })
+  return stdout
+}
+
+async function collectStderr(appDir) {
+  let stderr = ''
+  const port = await findPort()
+  app = await launchApp(appDir, port, {
+    onStderr(msg) {
+      stderr += msg
+    },
+  })
+  return stderr
+}
+
+describe('Config Experimental Warning', () => {
+  afterEach(() => {
+    configFile.write('')
+    configFile.delete()
+    configFileMjs.write('')
+    configFileMjs.delete()
+    if (app) {
+      killApp(app)
+      app = undefined
+    }
+  })
 
   it('should not show warning with default config from function', async () => {
     configFile.write(`
       module.exports = (phase, { defaultConfig }) => {
         return {
-          target: 'server',
           ...defaultConfig,
         }
       }
     `)
 
-    const { stderr } = await nextBuild(appDir, [], { stderr: true })
-    expect(stderr).not.toMatch(/experimental feature/)
+    const stdout = await collectStdout(appDir)
+    expect(stdout).not.toMatch(' - Experiments (use at your own risk):')
   })
 
   it('should not show warning with config from object', async () => {
     configFile.write(`
       module.exports = {
-        target: 'server'
+        images: {},
       }
     `)
-    const { stderr } = await nextBuild(appDir, [], { stderr: true })
-    expect(stderr).not.toMatch(/experimental feature/)
+
+    const stdout = await collectStdout(appDir)
+    expect(stdout).not.toMatch(' - Experiments (use at your own risk):')
   })
 
   it('should show warning with config from object with experimental', async () => {
     configFile.write(`
       module.exports = {
-        target: 'server',
         experimental: {
-          something: true
+          workerThreads: true
         }
       }
     `)
-    const { stderr } = await nextBuild(appDir, [], { stderr: true })
-    expect(stderr).toMatch(/experimental feature/)
+
+    const stdout = await collectStdout(appDir)
+    expect(stdout).toMatch(' - Experiments (use at your own risk):')
+    expect(stdout).toMatch(' · workerThreads')
   })
 
   it('should show warning with config from function with experimental', async () => {
     configFile.write(`
       module.exports = (phase) => ({
-        target: 'server',
         experimental: {
-          something: true
+          workerThreads: true
         }
       })
     `)
-    const { stderr } = await nextBuild(appDir, [], { stderr: true })
-    expect(stderr).toMatch(/experimental feature/)
+
+    const stdout = await collectStdout(appDir)
+    expect(stdout).toMatch(' - Experiments (use at your own risk):')
+    expect(stdout).toMatch(' · workerThreads')
+  })
+
+  it('should not show warning with default value', async () => {
+    configFile.write(`
+      module.exports = (phase) => ({
+        experimental: {
+          workerThreads: false
+        }
+      })
+    `)
+
+    const stdout = await collectStdout(appDir)
+    expect(stdout).not.toMatch(' - Experiments (use at your own risk):')
+    expect(stdout).not.toMatch(' · workerThreads')
+  })
+
+  it('should show warning with config from object with experimental and multiple keys', async () => {
+    configFile.write(`
+      module.exports = {
+        experimental: {
+          workerThreads: true,
+          scrollRestoration: true,
+        }
+      }
+    `)
+
+    const stdout = await collectStdout(appDir)
+    expect(stdout).toMatch(' - Experiments (use at your own risk):')
+    expect(stdout).toMatch(' · workerThreads')
+    expect(stdout).toMatch(' · scrollRestoration')
+  })
+
+  it('should show warning for dropped experimental.appDir option', async () => {
+    configFile.write(`
+      module.exports = {
+        experimental: {
+          appDir: true,
+        }
+      }
+    `)
+
+    const stderr = await collectStderr(appDir)
+    expect(stderr).toMatch(
+      'App router is available by default now, `experimental.appDir` option can be safely removed.'
+    )
   })
 })
