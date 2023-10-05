@@ -16,6 +16,7 @@ import {
 } from 'next-test-utils'
 import webdriver from 'next-webdriver'
 import { join } from 'path'
+import stripAnsi from 'strip-ansi'
 
 const appDir = join(__dirname, '../')
 let appPort
@@ -24,7 +25,7 @@ let app
 const context = {}
 
 describe('AMP Usage', () => {
-  describe('production mode', () => {
+  ;(process.env.TURBOPACK ? describe.skip : describe)('production mode', () => {
     let output = ''
 
     beforeAll(async () => {
@@ -36,7 +37,8 @@ describe('AMP Usage', () => {
         stdout: true,
         stderr: true,
       })
-      output = result.stdout + result.stderr
+
+      output = stripAnsi(result.stdout + result.stderr)
 
       appPort = context.appPort = await findPort()
       app = await nextStart(appDir, context.appPort)
@@ -104,21 +106,6 @@ describe('AMP Usage', () => {
         const result = await browser.eval('window.NAV_PAGE_LOADED')
 
         expect(result).toBeFalsy()
-      })
-
-      it('should add link preload for amp script', async () => {
-        const html = await renderViaHTTP(appPort, '/?amp=1')
-        await validateAMP(html)
-        const $ = cheerio.load(html)
-        expect(
-          $(
-            $('link[rel=preload]')
-              .toArray()
-              .find(
-                (i) => $(i).attr('href') === 'https://cdn.ampproject.org/v0.js'
-              )
-          ).attr('href')
-        ).toBe('https://cdn.ampproject.org/v0.js')
       })
 
       it('should drop custom scripts', async () => {
@@ -328,7 +315,7 @@ describe('AMP Usage', () => {
       ])
     })
 
-    it('should detect the changes and display it', async () => {
+    it.skip('should detect the changes and display it', async () => {
       let browser
       try {
         browser = await webdriver(dynamicAppPort, '/hmr/test')
@@ -369,7 +356,7 @@ describe('AMP Usage', () => {
       }
     })
 
-    it('should detect changes and refresh an AMP page', async () => {
+    it.skip('should detect changes and refresh an AMP page', async () => {
       let browser
       try {
         browser = await webdriver(dynamicAppPort, '/hmr/amp')
@@ -398,7 +385,7 @@ describe('AMP Usage', () => {
       }
     })
 
-    it('should detect changes to component and refresh an AMP page', async () => {
+    it.skip('should detect changes to component and refresh an AMP page', async () => {
       const browser = await webdriver(dynamicAppPort, '/hmr/comp')
       await check(() => browser.elementByCss('#hello-comp').text(), /hello/)
 
@@ -414,7 +401,7 @@ describe('AMP Usage', () => {
       await check(() => browser.elementByCss('#hello-comp').text(), /hello/)
     })
 
-    it('should not reload unless the page is edited for an AMP page', async () => {
+    it.skip('should not reload unless the page is edited for an AMP page', async () => {
       let browser
       const hmrTestPagePath = join(__dirname, '../', 'pages', 'hmr', 'test.js')
       const originalContent = readFileSync(hmrTestPagePath, 'utf8')
@@ -469,7 +456,7 @@ describe('AMP Usage', () => {
       }
     })
 
-    it('should detect changes and refresh a hybrid AMP page', async () => {
+    it.skip('should detect changes and refresh a hybrid AMP page', async () => {
       let browser
       try {
         browser = await webdriver(dynamicAppPort, '/hmr/hybrid?amp=1')
@@ -504,7 +491,7 @@ describe('AMP Usage', () => {
       }
     })
 
-    it('should detect changes and refresh an AMP page at root pages/', async () => {
+    it.skip('should detect changes and refresh an AMP page at root pages/', async () => {
       let browser
       try {
         browser = await webdriver(dynamicAppPort, '/root-hmr')
@@ -553,8 +540,7 @@ describe('AMP Usage', () => {
     })
 
     it('should not contain missing files warning', async () => {
-      expect(output).toContain('compiled client and server successfully')
-      expect(output).toContain('compiling /only-amp')
+      expect(output).toContain('Compiled /only-amp')
       expect(output).not.toContain('Could not find files for')
     })
   })

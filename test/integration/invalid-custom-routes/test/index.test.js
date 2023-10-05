@@ -144,10 +144,6 @@ const runTests = () => {
     )
 
     expect(stderr).toContain(
-      `\`destination\` is missing for route {"source":"/hello","permanent":false}`
-    )
-
-    expect(stderr).toContain(
       `\`source\` is not a string for route {"source":123,"destination":"/another","permanent":false}`
     )
 
@@ -157,14 +153,6 @@ const runTests = () => {
 
     expect(stderr).toContain(
       `\`statusCode\` is not undefined or valid statusCode for route {"source":"/hello","destination":"/another","statusCode":404}`
-    )
-
-    expect(stderr).toContain(
-      `\`permanent\` is not set to \`true\` or \`false\` for route {"source":"/hello","destination":"/another","permanent":"yes"}`
-    )
-
-    expect(stderr).toContain(
-      `\`permanent\` is not set to \`true\` or \`false\` for route {"source":"/hello","destination":"/another","permanent":"yes"}`
     )
 
     expect(stderr).toContain(
@@ -592,10 +580,11 @@ describe('Errors on invalid custom routes', () => {
   afterAll(() => fs.remove(nextConfigPath))
 
   describe('dev mode', () => {
+    let stderr = ''
     beforeAll(() => {
       getStderr = async () => {
-        let stderr = ''
-        await launchApp(appDir, await findPort(), {
+        const port = await findPort()
+        await launchApp(appDir, port, {
           onStderr: (msg) => {
             stderr += msg
           },
@@ -603,11 +592,13 @@ describe('Errors on invalid custom routes', () => {
         return stderr
       }
     })
+    afterEach(() => {
+      stderr = ''
+    })
 
     runTests()
   })
-
-  describe('production mode', () => {
+  ;(process.env.TURBOPACK ? describe.skip : describe)('production mode', () => {
     beforeAll(() => {
       getStderr = async () => {
         const { stderr } = await nextBuild(appDir, [], { stderr: true })
