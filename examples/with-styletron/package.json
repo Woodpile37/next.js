@@ -9,7 +9,7 @@
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styletron-engine-atomic": "1.4.6",
+    "styletron-engine-atomic": "1.5.0",
     "styletron-react": "6.1.0"
   }
 }
