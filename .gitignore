@@ -2,6 +2,7 @@
 dist
 .next
 target
+packages/next/wasm/@next
 
 # dependencies
 node_modules
@@ -9,11 +10,14 @@ package-lock.json
 yarn.lock
 !/yarn.lock
 test/node_modules
+.pnpm-store/
+.github/**/node_modules
 
 # logs & pids
 *.log
 pids
 *.cpuprofile
+*.heapsnapshot
 
 # coverage
 .nyc_output
@@ -25,6 +29,8 @@ test/**/next-env.d.ts
 .DS_Store
 /e2e-tests
 test/tmp/**
+test/.trace
+test/traces
 
 # Editors
 **/.idea
@@ -44,3 +50,5 @@ test-timings.json
 
 # Cache
 *.tsbuildinfo
+.swc/
+.turbo
