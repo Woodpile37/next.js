@@ -10,7 +10,7 @@
     "@apollo/server": "^4.1.1",
     "@as-integrations/next": "^1.1.0",
     "@graphql-tools/schema": "^9.0.9",
-    "deepmerge": "4.2.2",
+    "deepmerge": "4.3.1",
     "graphql": "^16.6.0",
     "next": "latest",
     "react": "^18.2.0",
