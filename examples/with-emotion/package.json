@@ -6,7 +6,7 @@
     "start": "next start"
   },
   "devDependencies": {
-    "@emotion/babel-plugin": "11.10.2"
+    "@emotion/babel-plugin": "11.11.0"
   },
   "dependencies": {
     "@emotion/react": "11.10.4",
