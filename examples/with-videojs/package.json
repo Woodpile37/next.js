@@ -9,7 +9,7 @@
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "video.js": "^7.20.3",
+    "video.js": "^8.6.0",
     "videojs-youtube": "^2.6.1"
   },
   "devDependencies": {
