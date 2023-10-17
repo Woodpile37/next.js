@@ -6,7 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@fingerprintjs/fingerprintjs-pro-react": "1.0.1",
+    "@fingerprintjs/fingerprintjs-pro-react": "2.5.1",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0"
